@@ -16,7 +16,6 @@ class my_controller(app_manager.RyuApp):
 
     def __init__(self, *args, **kwargs):
         super(my_controller, self).__init__(*args, **kwargs)
-        self.h2_is_communicating = False
 
     @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
     def switch_features_handler(self, ev):
@@ -33,24 +32,6 @@ class my_controller(app_manager.RyuApp):
         actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
                                           ofproto.OFPCML_NO_BUFFER)]
         self.add_flow(datapath, 0, match, actions)
-        match = parser.OFPMatch(in_port=4)
-        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
-        self.add_flow(datapath, 2, match, actions, meter_id=1)
-        
-        match = parser.OFPMatch(in_port=2)
-        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
-        self.add_flow(datapath, 3, match, actions, meter_id=1)
-
-        match = parser.OFPMatch(in_port=3)
-        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
-        self.add_flow(datapath, 0, match, actions,meter_id=1)
-
-        match = parser.OFPMatch(in_port=1)
-        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
-        self.add_flow(datapath, 0, match, actions, meter_id=1)
-
-
-
    
     def add_flow(self, datapath, priority, match, actions, buffer_id=None, meter_id=None, command=None):
         ofproto = datapath.ofproto
@@ -91,34 +72,35 @@ class my_controller(app_manager.RyuApp):
         pkt = packet.Packet(msg.data)
         eth = pkt.get_protocols(ethernet.ethernet)[0]
  
-        # # If host H2 is communicating, create a flow entry to block host H1
-        # self.h2_is_communicating = True if in_port == 2 else False
-        # match = parser.OFPMatch(in_port=3)
-        # actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
-        #                                  ofproto.OFPCML_NO_BUFFER)]
-        # self.add_flow(datapath, 1, match, actions, meter_id=1, command=ofproto.OFPFC_DELETE)
-        # if self.h2_is_communicating:
-        #     match = parser.OFPMatch(in_port=3)
-        #     actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
-        #                                      ofproto.OFPCML_NO_BUFFER)]
-        #     self.add_flow(datapath, 1, match, actions, meter_id=1)
-        # else:
-        #     # If host H2 is not communicating, remove the flow entry
-        #     match = parser.OFPMatch(in_port=3)
-        #     actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
-        #     self.add_flow(datapath, 0, match, actions, meter_id=1)
-        #
+
+        match = parser.OFPMatch(in_port=4)
+        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
+        self.add_flow(datapath, 2, match, actions, meter_id=1)
+        
+        match = parser.OFPMatch(in_port=2)
+        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
+        self.add_flow(datapath, 3, match, actions, meter_id=1)
+
+        match = parser.OFPMatch(in_port=3)
+        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
+        self.add_flow(datapath, 0, match, actions,meter_id=1)
+
+        match = parser.OFPMatch(in_port=1)
+        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
+        self.add_flow(datapath, 0, match, actions, meter_id=1)
+ 
+
         if eth.ethertype == ether_types.ETH_TYPE_LLDP:
             # ignore lldp packet
             return
         dst = eth.dst
         src = eth.src
 
-        match = parser.OFPMatch(in_port=msg.match['in_port'])
-        actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER)]
-        inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS, actions),
-                parser.OFPInstructionMeter(meter_id=1)]
-        mod = parser.OFPFlowMod(datapath=datapath, priority=1, match=match, instructions=inst)
-        datapath.send_msg(mod)
+        # match = parser.OFPMatch(in_port=msg.match['in_port'])
+        # actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER)]
+        # inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS, actions),
+        #         parser.OFPInstructionMeter(meter_id=1)]
+        # mod = parser.OFPFlowMod(datapath=datapath, priority=1, match=match, instructions=inst)
+        # datapath.send_msg(mod)
 
 
