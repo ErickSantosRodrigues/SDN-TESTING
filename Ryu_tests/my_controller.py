@@ -79,15 +79,15 @@ class my_controller(app_manager.RyuApp):
         
         match = parser.OFPMatch(in_port=2)
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
-        self.add_flow(datapath, 3, match, actions, meter_id=1)
+        self.add_flow(datapath, 1000, match, actions, meter_id=1)
 
         match = parser.OFPMatch(in_port=3)
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
-        self.add_flow(datapath, 0, match, actions,meter_id=1)
+        self.add_flow(datapath, 1, match, actions,meter_id=1)
 
         match = parser.OFPMatch(in_port=1)
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
-        self.add_flow(datapath, 0, match, actions, meter_id=1)
+        self.add_flow(datapath, 50, match, actions, meter_id=1)
  
 
         if eth.ethertype == ether_types.ETH_TYPE_LLDP:
