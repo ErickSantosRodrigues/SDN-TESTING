@@ -20,7 +20,7 @@ class SimplePktSwitch(Topo):
         h4 = self.addHost('h4', mac='00:00:00:00:00:04')
 
 # Adding switches
-        s1 = self.addSwitch('s1', cls=OVSSwitch)
+        s1 = self.addSwitch('s1', cls=OVSSwitch, protocols="OpenFlow13")
 # Add links
         self.addLink(h1, s1)
         self.addLink(h2, s1)
@@ -29,7 +29,7 @@ class SimplePktSwitch(Topo):
 
 
 def run():
-    net = Mininet(topo=SimplePktSwitch(), host=CPULimitedHost, controller=RemoteController('c', '127.0.0.1', 6653))
+    net = Mininet(topo=SimplePktSwitch(), host=CPULimitedHost, controller=RemoteController('c', '127.0.0.1', 6653, protocols="OpenFlow13"))
     net.start()
     h1, h2, h3, h4 = net.hosts[0], net.hosts[1], net.hosts[2], net.hosts[3]
     print(f"h1 MAC: {h1.MAC()}\nh2 MAC: {h2.MAC()}\nh3 MAC: {h3.MAC()}\nh4 MAC: {h4.MAC()}")
@@ -47,13 +47,13 @@ def run():
     #ping
     net.pingAll()
     h1.cmd('''xterm -hold -T "h1_stream_A" -e "cvlc -vvv ../videos/test.mp4 --sout '#standard{access=http, mux=ts,dst=:8080}' --no-sout-rtp-sap --no-sout-standard-sap --ttl=1 --sout-keep --loop" &''')
-    h1.cmd('''xterm -hold -T "h1_stream_B" -e "cvlc -vvv ../videos/test2.mp4 --sout '#standard{access=http, mux=ts,dst=:8081}' --no-sout-rtp-sap --no-sout-standard-sap --ttl=1 --sout-keep --loop" &''')
+    h4.cmd('''xterm -hold -T "h4_stream_B" -e "cvlc -vvv ../videos/test2.mp4 --sout '#standard{access=http, mux=ts,dst=:8081}' --no-sout-rtp-sap --no-sout-standard-sap --ttl=1 --sout-keep --loop" &''')
 
 
     h2.cmd("xterm -hold -T 'h2' -e 'vlc http://10.0.0.1:8080' &")
 
     sleep(6)
-    h3.cmd("xterm -hold -T 'h3' -e 'vlc http://10.0.0.1:8081' &")
+    h3.cmd("xterm -hold -T 'h3' -e 'vlc http://10.0.0.4:8081' &")
     CLI(net)
     # h1.cmd("rm -r d1 d2 d3")
     net.stop()
