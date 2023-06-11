@@ -20,7 +20,7 @@ class SimplePktSwitch(Topo):
         h4 = self.addHost('h4', mac='00:00:00:00:00:04')
 
 # Adding switches
-        s1 = self.addSwitch('s1', cls=OVSSwitch, protocols=OpenFlow13)
+        s1 = self.addSwitch('s1', cls=OVSSwitch)
 # Add links
         self.addLink(h1, s1)
         self.addLink(h2, s1)
@@ -29,7 +29,7 @@ class SimplePktSwitch(Topo):
 
 
 def run():
-    net = Mininet(topo=SimplePktSwitch(), host=CPULimitedHost, controller=RemoteController('c', '127.0.0.1', 6633))
+    net = Mininet(topo=SimplePktSwitch(), host=CPULimitedHost, controller=RemoteController('c', '127.0.0.1', 6653))
     net.start()
     h1, h2, h3, h4 = net.hosts[0], net.hosts[1], net.hosts[2], net.hosts[3]
     print(f"h1 MAC: {h1.MAC()}\nh2 MAC: {h2.MAC()}\nh3 MAC: {h3.MAC()}\nh4 MAC: {h4.MAC()}")
