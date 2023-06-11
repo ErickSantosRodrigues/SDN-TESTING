@@ -25,7 +25,7 @@ class my_controller(app_manager.RyuApp):
         #add a meter entry with a rate limit of 1000 kbps
         meter_mod = parser.OFPMeterMod(datapath=datapath, command=ofproto.OFPMC_ADD,
                                       flags=ofproto.OFPMF_KBPS, meter_id=1,
-                                      bands=[parser.OFPMeterBandDrop(rate=100, burst_size=0)])
+                                      bands=[parser.OFPMeterBandDrop(rate=300, burst_size=0)])
         datapath.send_msg(meter_mod)
         match = parser.OFPMatch()
         actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
@@ -38,7 +38,7 @@ class my_controller(app_manager.RyuApp):
         
         match = parser.OFPMatch(in_port=2)
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
-        self.add_flow(datapath, 1000, match, actions, meter_id=1)
+        self.add_flow(datapath, 3, match, actions, meter_id=1)
 
         match = parser.OFPMatch(in_port=3)
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
@@ -46,7 +46,7 @@ class my_controller(app_manager.RyuApp):
 
         match = parser.OFPMatch(in_port=1)
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
-        self.add_flow(datapath, 50, match, actions, meter_id=1)
+        self.add_flow(datapath, 1, match, actions, meter_id=1)
 
         # match = parser.OFPMatch(in_port=msg.match['in_port'])
         # actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER)]

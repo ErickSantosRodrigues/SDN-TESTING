@@ -20,7 +20,7 @@ class SimplePktSwitch(Topo):
         h4 = self.addHost('h4', mac='00:00:00:00:00:04')
 
 # Adding switches
-        s1 = self.addSwitch('s1', cls=OVSSwitch)
+        s1 = self.addSwitch('s1', cls=OVSSwitch, protocols=OpenFlow13)
 # Add links
         self.addLink(h1, s1)
         self.addLink(h2, s1)
