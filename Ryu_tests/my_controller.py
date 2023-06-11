@@ -32,19 +32,19 @@ class my_controller(app_manager.RyuApp):
                                           ofproto.OFPCML_NO_BUFFER)]
         self.add_flow(datapath, 0, match, actions)
 
-        match = parser.OFPMatch(in_port=4)
+        match = parser.OFPMatch(eth_src=self.H4_MAC)
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
         self.add_flow(datapath, 2, match, actions, meter_id=1)
         
-        match = parser.OFPMatch(in_port=2)
+        match = parser.OFPMatch(eth_src=self.H2_MAC)
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
         self.add_flow(datapath, 3, match, actions, meter_id=1)
 
-        match = parser.OFPMatch(in_port=3)
+        match = parser.OFPMatch(eth_src=self.H3_MAC)
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
         self.add_flow(datapath, 1, match, actions,meter_id=1)
 
-        match = parser.OFPMatch(in_port=1)
+        match = parser.OFPMatch(eth_src=self.H1_MAC)
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
         self.add_flow(datapath, 1, match, actions, meter_id=1)
 
