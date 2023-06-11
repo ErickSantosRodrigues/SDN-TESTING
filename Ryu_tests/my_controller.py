@@ -67,10 +67,10 @@ class my_controller(app_manager.RyuApp):
         else:
             mod = parser.OFPFlowMod(datapath=datapath, priority=priority,
                                     match=match, instructions=inst, command=command)
-        # datapath.send_msg(mod)
-        # # Add a barrier request to ensure the flow modification is executed before continuing
-        # barrier_req = parser.OFPBarrierRequest(datapath)
-        # datapath.send_msg(barrier_req)
+        datapath.send_msg(mod)
+        # Add a barrier request to ensure the flow modification is executed before continuing
+        barrier_req = parser.OFPBarrierRequest(datapath)
+        datapath.send_msg(barrier_req)
     
 
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
