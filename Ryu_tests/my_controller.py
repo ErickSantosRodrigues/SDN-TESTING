@@ -13,6 +13,7 @@ class my_controller(app_manager.RyuApp):
     H2_MAC='00:00:00:00:00:02'
     H3_MAC='00:00:00:00:00:03'
     H4_MAC='00:00:00:00:00:04'
+    port2_in_communication = False
 
     def __init__(self, *args, **kwargs):
         super(my_controller, self).__init__(*args, **kwargs)
@@ -27,34 +28,32 @@ class my_controller(app_manager.RyuApp):
                                       flags=ofproto.OFPMF_KBPS, meter_id=1,
                                       bands=[parser.OFPMeterBandDrop(rate=300, burst_size=0)])
         datapath.send_msg(meter_mod)
+        #add a meter entry with a rate limit of 1000 kbps
+        meter_mod = parser.OFPMeterMod(datapath=datapath, command=ofproto.OFPMC_ADD,
+                                      flags=ofproto.OFPMF_KBPS, meter_id=2,
+                                      bands=[parser.OFPMeterBandDrop(rate=0, burst_size=0)])
+        datapath.send_msg(meter_mod)
         match = parser.OFPMatch()
         actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
                                           ofproto.OFPCML_NO_BUFFER)]
         self.add_flow(datapath, 0, match, actions)
 
-        match = parser.OFPMatch(eth_src=self.H4_MAC)
+        match = parser.OFPMatch(in_port=4)
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
-        self.add_flow(datapath, 2, match, actions, meter_id=1)
+        self.add_flow(datapath, 1, match, actions, meter_id=1)
         
-        match = parser.OFPMatch(eth_src=self.H2_MAC)
-        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
-        self.add_flow(datapath, 3, match, actions, meter_id=1)
-
-        match = parser.OFPMatch(eth_src=self.H3_MAC)
-        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
-        self.add_flow(datapath, 1, match, actions,meter_id=1)
-
-        match = parser.OFPMatch(eth_src=self.H1_MAC)
+        match = parser.OFPMatch(in_port=2)
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
         self.add_flow(datapath, 1, match, actions, meter_id=1)
 
-        # match = parser.OFPMatch(in_port=msg.match['in_port'])
-        # actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER)]
-        # inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS, actions),
-        #         parser.OFPInstructionMeter(meter_id=1)]
-        # mod = parser.OFPFlowMod(datapath=datapath, priority=1, match=match, instructions=inst)
-        # datapath.send_msg(mod)
- 
+        match = parser.OFPMatch(in_port=3)
+        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
+        self.add_flow(datapath, 1, match, actions,meter_id=1)
+
+        match = parser.OFPMatch(in_port=1)
+        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
+        self.add_flow(datapath, 1, match, actions, meter_id=1)
+
    
     def add_flow(self, datapath, priority, match, actions, buffer_id=None, meter_id=None, command=None):
         ofproto = datapath.ofproto
@@ -78,7 +77,6 @@ class my_controller(app_manager.RyuApp):
         # Add a barrier request to ensure the flow modification is executed before continuing
         barrier_req = parser.OFPBarrierRequest(datapath)
         datapath.send_msg(barrier_req)
-    
 
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def _packet_in_handler(self, ev):
@@ -101,5 +99,11 @@ class my_controller(app_manager.RyuApp):
         dst = eth.dst
         src = eth.src
 
-
+        self.port2_in_communication = True if in_port == 2 else False
+        match = parser.OFPMatch(in_port=3)
+        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
+        if self.port2_in_communication:
+            self.add_flow(datapath, 1, match, actions, meter_id=2, command=ofproto.OFPFC_MODIFY)
+        else:
+            self.add_flow(datapath, 1, match, actions, meter_id=1, command=ofproto.OFPFC_MODIFY)
 
