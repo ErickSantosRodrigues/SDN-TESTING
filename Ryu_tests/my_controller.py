@@ -28,27 +28,24 @@ class my_controller(app_manager.RyuApp):
                                       bands=[parser.OFPMeterBandDrop(rate=300, burst_size=0)])
         datapath.send_msg(meter_mod)
         match = parser.OFPMatch()
-        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
+        actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
+                                          ofproto.OFPCML_NO_BUFFER)]
         self.add_flow(datapath, 0, match, actions)
 
         match = parser.OFPMatch(eth_src=self.H4_MAC)
-        actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
-                                          ofproto.OFPCML_NO_BUFFER)]
+        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
         self.add_flow(datapath, 2, match, actions, meter_id=1)
         
         match = parser.OFPMatch(eth_src=self.H2_MAC)
-        actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
-                                          ofproto.OFPCML_NO_BUFFER)]
+        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
         self.add_flow(datapath, 3, match, actions, meter_id=1)
 
         match = parser.OFPMatch(eth_src=self.H3_MAC)
-        actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
-                                          ofproto.OFPCML_NO_BUFFER)]
+        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
         self.add_flow(datapath, 1, match, actions,meter_id=1)
 
         match = parser.OFPMatch(eth_src=self.H1_MAC)
-        actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
-                                          ofproto.OFPCML_NO_BUFFER)]
+        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
         self.add_flow(datapath, 1, match, actions, meter_id=1)
 
         # match = parser.OFPMatch(in_port=msg.match['in_port'])
