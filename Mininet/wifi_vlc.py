@@ -1,4 +1,4 @@
-from mininet.node import Controller
+from mininet.node import RemoteController
 from mininet.log import setLogLevel, info
 from mn_wifi.node import OVSKernelAP
 from mn_wifi.cli import CLI
@@ -6,7 +6,7 @@ from mn_wifi.net import Mininet_wifi
 from mininet.topo import Topo
 
 def topology():
-    net = Mininet_wifi(controller=Controller, accessPoint=OVSKernelAP)
+    net = Mininet_wifi(controller=RemoteController, accessPoint=OVSKernelAP)
 
     info("*** Creating nodes\n")
     sta1 = net.addStation('sta1')
