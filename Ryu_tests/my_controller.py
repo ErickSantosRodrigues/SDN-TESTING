@@ -99,11 +99,11 @@ class my_controller(app_manager.RyuApp):
         dst = eth.dst
         src = eth.src
 
-        self.port2_in_communication = True if in_port == 2 else False
-        match = parser.OFPMatch(in_port=3)
+        self.port2_in_communication = True if in_port == 3 else False
+        match = parser.OFPMatch(in_port=2)
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
         if self.port2_in_communication:
-            self.add_flow(datapath, 1, match, actions, meter_id=2, command=ofproto.OFPFC_MODIFY)
+            self.add_flow(datapath, 2, match, actions, meter_id=2)
         else:
-            self.add_flow(datapath, 1, match, actions, meter_id=1, command=ofproto.OFPFC_MODIFY)
+            self.add_flow(datapath, 1, match, actions, meter_id=1)
 
