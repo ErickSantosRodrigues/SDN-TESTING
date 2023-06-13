@@ -28,7 +28,7 @@ def topology():
     net.start()
 
     info("*** Running CLI\n")
-    CLI_wifi(net)
+    CLI(net)
 
     info("*** Stopping network")
     net.stop()
