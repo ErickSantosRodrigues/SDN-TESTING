@@ -9,10 +9,10 @@ from ryu.lib import dpid as dpid_lib
 class my_controller(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
     # _CONTEXTS = {'stplib': stplib.Stp}
-    H1_MAC='00:00:00:00:00:01'
-    H2_MAC='00:00:00:00:00:02'
-    H3_MAC='00:00:00:00:00:03'
-    H4_MAC='00:00:00:00:00:04'
+    H1_MAC = '00:00:00:00:00:01'
+    H2_MAC = '00:00:00:00:00:02'
+    H3_MAC = '00:00:00:00:00:03'
+    H4_MAC = '00:00:00:00:00:04'
     port2_in_communication = False
 
     def __init__(self, *args, **kwargs):
@@ -23,15 +23,19 @@ class my_controller(app_manager.RyuApp):
         datapath = ev.msg.datapath
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
-        #add a meter entry with a rate limit of 1000 kbps
-        meter_mod = parser.OFPMeterMod(datapath=datapath, command=ofproto.OFPMC_ADD,
-                                      flags=ofproto.OFPMF_KBPS, meter_id=1,
-                                      bands=[parser.OFPMeterBandDrop(rate=1000, burst_size=0)])
+        # add a meter entry with a rate limit of 1000 kbps
+        meter_mod = parser.OFPMeterMod(datapath=datapath,
+                                        command=ofproto.OFPMC_ADD,
+                                        flags=ofproto.OFPMF_KBPS, meter_id=1,
+                                        bands=[parser.OFPMeterBandDrop(rate=1000,
+                                                                        burst_size=0)])
         datapath.send_msg(meter_mod)
-        #add a meter entry with a rate limit of 1000 kbps
-        meter_mod = parser.OFPMeterMod(datapath=datapath, command=ofproto.OFPMC_ADD,
-                                      flags=ofproto.OFPMF_KBPS, meter_id=2,
-                                      bands=[parser.OFPMeterBandDrop(rate=100, burst_size=0)])
+        # add a meter entry with a rate limit of 1000 kbps
+        meter_mod = parser.OFPMeterMod(datapath=datapath,
+                                        command=ofproto.OFPMC_ADD,
+                                        flags=ofproto.OFPMF_KBPS, meter_id=2,
+                                        bands=[parser.OFPMeterBandDrop(rate=100,
+                                                                        burst_size=0)])
         datapath.send_msg(meter_mod)
         match = parser.OFPMatch()
         actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
