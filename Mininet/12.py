@@ -3,6 +3,7 @@ from mn_wifi.cli import CLI_wifi
 from mn_wifi.net import Mininet_wifi
 from mininet.link import TCLink
 
+
 def topology():
     "Create a network."
     net = Mininet_wifi(controller=Controller)
@@ -36,6 +37,7 @@ def topology():
 
     info("*** Stopping network\n")
     net.stop()
+
 
 if __name__ == '__main__':
     topology()
