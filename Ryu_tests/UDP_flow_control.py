@@ -12,7 +12,6 @@ from ryu.lib import mac
 from ryu.topology.api import get_switch, get_link
 from ryu.app.wsgi import ControllerBase
 from ryu.topology import event, switches
-import networkx as nx
 
 
 class ProjectController(app_manager.RyuApp):
