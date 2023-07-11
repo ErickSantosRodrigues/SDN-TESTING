@@ -26,10 +26,10 @@ def run():
     net.start()
     h1, h2, h3 = net.hosts[0], net.hosts[1], net.hosts[2]
     net.pingAll()
-    h1.cmd('''xterm -hold -T "h1_5002" -e "iperf3 -s --port 5002" -geometry 100x25+0+0 &''')
-    h1.cmd('''xterm -hold -T "h1_5003" -e "iperf3 -s --port 5003" -geometry 100x25+625+0 &''')
-    h2.cmd('''xterm -hold -T "h2" -e "iperf3 -c 10.0.0.1 --port 5002 -t 60 -i 60" -geometry 100x25+0+380 &''')
-    h3.cmd('''xterm -hold -T "h3" -e "iperf3 -c 10.0.0.1 --port 5003 -t 60 -i 60" -geometry 100x25+625+380 &''')
+    h1.cmd('''xterm -geometry 80x24+0+0 -hold -T "h1_5002" -e "iperf3 -s --port 5002" &''')
+    h1.cmd('''xterm -geometry 80x24+625+0 -hold -T "h1_5003" -e "iperf3 -s --port 5003" &''')
+    h2.cmd('''xterm -geometry 80x24+0+380 -hold -T "h2" -e "iperf3 -c 10.0.0.1 --port 5002 -t 60 -i 60"&''')
+    h3.cmd('''xterm -geometry 80x24+625+380 -hold -T "h3" -e "iperf3 -c 10.0.0.1 --port 5003 -t 60 -i 60" &''')
     CLI(net)
     net.stop()
 
