@@ -68,6 +68,3 @@ class my_controller(app_manager.RyuApp):
         datapath = msg.datapath
         pkt = packet.Packet(msg.data)
         eth = pkt.get_protocol(ethernet.ethernet)
-        if eth.ethertype == ether_types.ETH_TYPE_LLDP:
-            return
-        self.logger.info(f"Packet in: {pkt}")
