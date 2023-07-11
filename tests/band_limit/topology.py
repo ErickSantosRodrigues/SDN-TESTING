@@ -30,6 +30,9 @@ def run():
     h1.cmd('''xterm -hold -T "h1_5003" -e "iperf3 -s --port 5003" -geometry 100x25+625+0 &''')
     h2.cmd('''xterm -hold -T "h2" -e "iperf3 -c 10.0.0.1 --port 5002 -t 60 -i 60" -geometry 100x25+0+380 &''')
     h3.cmd('''xterm -hold -T "h3" -e "iperf3 -c 10.0.0.1 --port 5003 -t 60 -i 60" -geometry 100x25+625+380 &''')
+    CLI(net)
+    net.stop()
+
 
 if __name__ == '__main__':
     setLogLevel('info')
