@@ -4,7 +4,7 @@ from mininet.net import Mininet
 from mininet.log import setLogLevel, info
 from mininet.node import RemoteController, OVSSwitch
 from mininet.cli import CLI
-
+from time import sleep
 
 class Band_limit_Topo(Topo):
     def __init__(self, **opts):
@@ -28,6 +28,7 @@ def run():
     net.pingAll()
     h1.cmd('''xterm -geometry 80x24+0+0 -hold -T "h1_5002" -e "iperf3 -s --port 5002" &''')
     h1.cmd('''xterm -geometry 80x24+625+0 -hold -T "h1_5003" -e "iperf3 -s --port 5003" &''')
+    sleep(5)
     h2.cmd('''xterm -geometry 80x24+0+380 -hold -T "h2" -e "iperf3 -c 10.0.0.1 --port 5002 -t 60 -i 60"&''')
     h3.cmd('''xterm -geometry 80x24+625+380 -hold -T "h3" -e "iperf3 -c 10.0.0.1 --port 5003 -t 60 -i 60" &''')
     CLI(net)
