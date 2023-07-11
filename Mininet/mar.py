@@ -50,7 +50,6 @@ def run():
     h1.cmd('''xterm -hold -T "h1_stream_A" -e "cvlc -vvv ../videos/test.mp4 --sout '#standard{access=http, mux=ts,dst=:8080}' --no-sout-rtp-sap --no-sout-standard-sap --ttl=1 --sout-keep --loop" &''')
     h4.cmd('''xterm -hold -T "h4_stream_B" -e "cvlc -vvv ../videos/test2.mp4 --sout '#standard{access=http, mux=ts,dst=:8081}' --no-sout-rtp-sap --no-sout-standard-sap --ttl=1 --sout-keep --loop" &''')
 
-
     h2.cmd("xterm -hold -T 'h2' -e 'vlc http://10.0.0.1:8080' &")
 
     sleep(6)

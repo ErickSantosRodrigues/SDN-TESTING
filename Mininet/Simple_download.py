@@ -4,6 +4,8 @@ from mininet.net import Mininet
 from mininet.log import setLogLevel, info
 from mininet.node import RemoteController, Controller, OVSSwitch
 from mininet.cli import CLI
+
+
 class SimplePktSwitch(Topo):
     """Simple topology example."""
     def __init__(self, **opts):
@@ -25,7 +27,7 @@ class SimplePktSwitch(Topo):
 
 def run():
     c0 = RemoteController('c', '0.0.0.0', 6633)
-    net = Mininet(topo=SimplePktSwitch() ,host=CPULimitedHost, controller=None)
+    net = Mininet(topo=SimplePktSwitch() , host=CPULimitedHost, controller=None)
     net.addController(c0)
     net.start()
     h1, h2, h3 = net.hosts[0], net.hosts[1], net.hosts[2]
@@ -49,7 +51,7 @@ def run():
     else:
         print("File was not downloaded on host h3") 
 
-    #ping
+    # ping
     net.pingAll()
     CLI(net)
     net.stop()

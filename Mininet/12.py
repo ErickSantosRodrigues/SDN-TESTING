@@ -1,6 +1,7 @@
 from mininet.node import Controller
 from mn_wifi.cli import CLI_wifi
 from mn_wifi.net import Mininet_wifi
+from mininet.log import info
 from mininet.link import TCLink
 
 

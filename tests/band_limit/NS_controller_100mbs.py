@@ -6,11 +6,11 @@ from ryu.lib.packet import packet, ethernet, ether_types
 from ryu.lib import dpid as dpid_lib
 
 
-class my_controller(app_manager.RyuApp):
+class NS_controller_100mbs(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
 
     def __init__(self, *args, **kwargs):
-        super(my_controller, self).__init__(*args, **kwargs)
+        super(NS_controller_100mbs, self).__init__(*args, **kwargs)
 
     @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
     def switch_features_handler(self, ev):

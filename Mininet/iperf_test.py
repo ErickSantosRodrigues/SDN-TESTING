@@ -6,6 +6,7 @@ from mininet.node import RemoteController, OVSSwitch
 from mininet.cli import CLI
 from time import sleep
 
+
 class SimplePktSwitch(Topo):
     """Simple topology example."""
     def __init__(self, **opts):

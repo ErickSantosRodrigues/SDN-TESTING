@@ -4,6 +4,7 @@ from mininet.log import setLogLevel, info
 from mininet.node import RemoteController, CPULimitedHost
 from mininet.cli import CLI
 
+
 class SimplePktSwitch(Topo):
     """Simple topology example."""
     def __init__(self, **opts):
@@ -53,10 +54,11 @@ def run():
     # info("*** h3 starting download...\n")
     # print(h3error)
 
-    #ping
+    # ping
     net.pingAll()
     CLI(net)
     net.stop()
+
 
 if __name__ == '__main__':
     setLogLevel('info')

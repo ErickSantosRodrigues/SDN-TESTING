@@ -5,6 +5,7 @@ from mn_wifi.cli import CLI
 from mn_wifi.net import Mininet_wifi
 from mininet.topo import Topo
 
+
 def topology():
     net = Mininet_wifi(controller=RemoteController, accessPoint=OVSKernelAP)
 
