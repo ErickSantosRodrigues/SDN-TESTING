@@ -33,6 +33,9 @@ def run():
     h2.cmd('''xterm -geometry 80x24+0+380 -hold -T "h2" -e "iperf3 -c 10.0.0.1 --port 5002 -t 60 -i 60"&''')
     sleep(5)
     h3.cmd('''xterm -geometry 80x24+625+380 -hold -T "h3" -e "iperf3 -c 10.0.0.1 --port 5003 -t 60 -i 60" &''')
+    sleep(70)
+    h2.cmd('''xterm -geometry 80x24+0+380 -hold -T "h2" -e "iperf3 -c 10.0.0.1 --port 5002 -t 5 -i 5"&''')
+
     CLI(net)
     net.stop()
 

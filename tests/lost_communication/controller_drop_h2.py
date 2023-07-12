@@ -86,7 +86,10 @@ class Controller_drop_h2(app_manager.RyuApp):
         if msg.match['in_port'] == 3:
             parser = datapath.ofproto_parser
             match = parser.OFPMatch(in_port=2)
-            # Drop the packets
-            actions = [parser.OFPActionOutput()]
+            # Drop the packets from h2
+            actions = []
             self.add_flow(datapath, 2, match, actions, idle_timeout=5)
+            self.logger.info("Packet from h3 dropped")
+        
+
 
