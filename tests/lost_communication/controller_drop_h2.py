@@ -48,6 +48,8 @@ class Controller_drop_h2(app_manager.RyuApp):
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
         self.add_flow(datapath, 1, match, actions, meter_id=1)
 
+        self.logger.info(f"Switch {dpid_lib.dpid_to_str(datapath.id)} ready")
+
     def add_flow(self, datapath, priority, match, actions, buffer_id=None, meter_id=None, command=None):
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
@@ -80,5 +82,7 @@ class Controller_drop_h2(app_manager.RyuApp):
         datapath = msg.datapath
         pkt = packet.Packet(msg.data)
         eth = pkt.get_protocol(ethernet.ethernet)
-
-        # need to modify to drop packets of h2 when h1 starts sending packets 
+        self.logger.info(f"Packet in: {eth.src} {eth.dst} {msg.match['in_port']}")
+        # Check if the inbound port is 2
+        if msg.match['in_port'] == 2:
+            self.logger.info("Communication detected on Port 2.")
