@@ -26,15 +26,12 @@ def run():
     net = Mininet(topo=Band_limit_Topo(), host=CPULimitedHost, controller=RemoteController('c', '127.0.0.1', 6653, protocols="OpenFlow13"))
     net.start()
     h1, h2, h3 = net.hosts[0], net.hosts[1], net.hosts[2]
-    net.pingAll()
     h1.cmd('''xterm -geometry 80x24+0+0 -hold -T "h1_5002" -e "iperf3 -s --port 5002" &''')
     h1.cmd('''xterm -geometry 80x24+625+0 -hold -T "h1_5003" -e "iperf3 -s --port 5003" &''')
     sleep(5)
     h2.cmd('''xterm -geometry 80x24+0+380 -hold -T "h2" -e "iperf3 -c 10.0.0.1 --port 5002 -t 60 -i 60"&''')
     sleep(5)
     h3.cmd('''xterm -geometry 80x24+625+380 -hold -T "h3" -e "iperf3 -c 10.0.0.1 --port 5003 -t 60 -i 60" &''')
-    sleep(70)
-    h2.cmd('''xterm -geometry 80x24+0+380 -hold -T "h2" -e "iperf3 -c 10.0.0.1 --port 5002 -t 5 -i 5"&''')
 
     CLI(net)
     net.stop()
