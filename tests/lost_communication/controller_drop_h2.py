@@ -88,10 +88,9 @@ class Controller_drop_h2(app_manager.RyuApp):
             match = parser.OFPMatch(in_port=2)
             # Drop the packets from h2
             actions = []
-            self.add_flow(datapath, 2, match, actions, idle_timeout=1)
+            self.add_flow(datapath, 2, match, actions, idle_timeout=0.5)
             self.logger.info("Packet from h3 dropped")
         
     @set_ev_cls(ofp_event.EventOFPFlowRemoved, MAIN_DISPATCHER)
     def flow_removed_handler(self, ev):
-        if ev.msg.reason == ev.msg.datapath.ofproto.OFPRR_IDLE_TIMEOUT:
-            self.logger.info("Communication of h2 is now restored")
+        self.logger.info("Communication of h2 is now restored")
