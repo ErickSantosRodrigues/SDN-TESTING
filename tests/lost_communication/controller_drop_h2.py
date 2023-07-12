@@ -89,8 +89,4 @@ class Controller_drop_h2(app_manager.RyuApp):
             # Drop the packets from h2
             actions = []
             self.add_flow(datapath, 2, match, actions, idle_timeout=1)
-            self.logger.info("Packet from h3 dropped")
 
-    @set_ev_cls(ofp_event.EventOFPFlowRemoved, MAIN_DISPATCHER)
-    def flow_removed_handler(self, ev):
-        self.logger.info("Communication of h2 is now restored")
