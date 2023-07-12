@@ -34,14 +34,15 @@ class Controller_drop_h2(app_manager.RyuApp):
         match = parser.OFPMatch()
         actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
                                           ofproto.OFPCML_NO_BUFFER)]
-        self.add_flow(datapath, 1, match, actions)
+        self.add_flow(datapath, 0, match, actions)
 
         match = parser.OFPMatch(in_port=1)
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
         self.add_flow(datapath, 1, match, actions, meter_id=1)
 
         match = parser.OFPMatch(in_port=2)
-        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
+        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL),
+                   parser.OFPActionOutput(ofproto.OFPP_CONTROLLER)]
         self.add_flow(datapath, 1, match, actions, meter_id=2)
 
         match = parser.OFPMatch(in_port=3)
@@ -50,7 +51,7 @@ class Controller_drop_h2(app_manager.RyuApp):
 
         self.logger.info(f"Switch {dpid_lib.dpid_to_str(datapath.id)} ready")
 
-    def add_flow(self, datapath, priority, match, actions, buffer_id=None, meter_id=None, command=None):
+    def add_flow(self, datapath, priority, match, actions, buffer_id=None, meter_id=None, command=None, idle_timeout=0):
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
 
@@ -64,10 +65,10 @@ class Controller_drop_h2(app_manager.RyuApp):
         if buffer_id:
             mod = parser.OFPFlowMod(datapath=datapath, buffer_id=buffer_id,
                                     priority=priority, match=match,
-                                    instructions=inst, command=command)
+                                    instructions=inst, command=command, idle_timeout=idle_timeout)
         else:
             mod = parser.OFPFlowMod(datapath=datapath, priority=priority,
-                                    match=match, instructions=inst, command=command)
+                                    match=match, instructions=inst, command=command, idle_timeout=idle_timeout)
         datapath.send_msg(mod)
         if command == ofproto.OFPFC_ADD:
             self.logger.info(f"Flow added: {match} -> {actions}")
@@ -82,7 +83,10 @@ class Controller_drop_h2(app_manager.RyuApp):
         datapath = msg.datapath
         pkt = packet.Packet(msg.data)
         eth = pkt.get_protocol(ethernet.ethernet)
-        self.logger.info(f"Packet in: {eth.src} {eth.dst} {msg.match['in_port']}")
-        # Check if the inbound port is 2
-        if msg.match['in_port'] == 2:
-            self.logger.info("Communication detected on Port 2.")
+        if msg.match['in_port'] == 3:
+            parser = datapath.ofproto_parser
+            match = parser.OFPMatch(in_port=2)
+            # Drop the packets
+            actions = [parser.OFPActionOutput()]
+            self.add_flow(datapath, 2, match, actions, idle_timeout=5)
+
