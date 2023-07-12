@@ -41,12 +41,12 @@ class Controller_drop_h2(app_manager.RyuApp):
         self.add_flow(datapath, 1, match, actions, meter_id=1)
 
         match = parser.OFPMatch(in_port=2)
-        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL),
-                   parser.OFPActionOutput(ofproto.OFPP_CONTROLLER)]
+        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
         self.add_flow(datapath, 1, match, actions, meter_id=2)
 
         match = parser.OFPMatch(in_port=3)
-        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
+        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL),
+                   parser.OFPActionOutput(ofproto.OFPP_CONTROLLER)]
         self.add_flow(datapath, 1, match, actions, meter_id=1)
 
         self.logger.info(f"Switch {dpid_lib.dpid_to_str(datapath.id)} ready")
