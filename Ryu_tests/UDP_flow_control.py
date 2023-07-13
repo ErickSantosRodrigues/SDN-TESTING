@@ -174,8 +174,8 @@ class ProjectController(app_manager.RyuApp):
        
         if src not in self.net:
             self.net.add_node(src)
-            self.net.add_edge(dpid,src,{'port':in_port})
-            self.net.add_edge(src,dpid)
+            # self.net.add_edge(dpid, src, {'port': in_port})
+            self.net.add_edge(src, dpid)
         if dst in self.net:
             # print (src in self.net)
             # print nx.shortest_path(self.net,1,4)
