@@ -1,5 +1,5 @@
 from ryu.base import app_manager
-from ryu.controller import ofp_event
+from ryu.controller import ofp_event, handler
 from ryu.controller.handler import set_ev_cls, CONFIG_DISPATCHER, MAIN_DISPATCHER
 from ryu.ofproto import ofproto_v1_3
 from ryu.lib.packet import packet, ethernet, ether_types
@@ -90,9 +90,8 @@ class Controller_drop_h2(app_manager.RyuApp):
             actions = []
             self.add_flow(datapath, 2, match, actions, idle_timeout=1)
 
-    # event handler to when a flow is removed
-    @set_ev_cls(ofp_event.EventOFPFlowRemoved, MAIN_DISPATCHER)
-    def flow_added_handler(self, ev):
+    @handler.set_ev_cls(ofp_event.EventOFPFlowRemoved, MAIN_DISPATCHER)
+    def flow_removed_handler(self, ev):
         msg = ev.msg
         datapath = msg.datapath 
         ofproto = datapath.ofproto
