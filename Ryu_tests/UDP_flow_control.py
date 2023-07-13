@@ -12,7 +12,6 @@ from ryu.lib import mac
 from ryu.topology.api import get_switch, get_link
 from ryu.app.wsgi import ControllerBase
 from ryu.topology import event, switches
-import networkx as nx
 
 
 class ProjectController(app_manager.RyuApp):
@@ -22,7 +21,6 @@ class ProjectController(app_manager.RyuApp):
         super(ProjectController, self).__init__(*args, **kwargs)
         self.mac_to_port = {}
         self.topology_api_app = self
-        self.net = nx.DiGraph()
         self.nodes = {}
         self.links = {}
         self.no_of_nodes = 0
@@ -182,7 +180,6 @@ class ProjectController(app_manager.RyuApp):
             # print nx.shortest_path(self.net,4,1)
             # print nx.shortest_path(self.net,src,4)
  
-            path = nx.shortest_path(self.net,src,dst)  
             next = path[path.index(dpid)+1]
             out_port = self.net[dpid][next]['port']
         else:
