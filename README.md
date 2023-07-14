@@ -8,5 +8,7 @@
   * Precisa que iperf3 esteja instalado.
   ***
 # teste 2 - Corte de comunicação 
+ O corte da comunicaçõa do host 2 é feito ao adcionar uma regra que quando o host 3 começa qualquer comunicação as comunicações do host 2 são descartas até que o host2 pare a comunicação.
 
+# teste 3 -
 
