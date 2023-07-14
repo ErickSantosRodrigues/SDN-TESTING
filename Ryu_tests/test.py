@@ -1,6 +1,8 @@
 from ryu.ofproto import ofproto_v1_3
 from ryu.controller import ofp_event
 from ryu.controller.handler import MAIN_DISPATCHER, set_ev_cls
+from ryu.base import app_manager
+
 
 class QueueController(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
