@@ -17,7 +17,7 @@ class QueueController(app_manager.RyuApp):
         parser = dp.ofproto_parser
 
         # create a queue with id=1, max_rate=1000 kbps
-        prop = parser.OFPQueuePropMaxRate(ofp.OFPQT_MIN_RATE_UNCFG, 100_000)
+        prop = parser.OFPQueuePropMaxRate(ofp.OFPQT_MIN_RATE, 100_000)
         properties = [prop]
         req = parser.OFPQueueSetConfigRequest(dp, 1, properties)
         dp.send_msg(req)
