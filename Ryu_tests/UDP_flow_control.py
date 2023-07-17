@@ -182,7 +182,7 @@ class ProjectController(app_manager.RyuApp):
             # print nx.shortest_path(self.net,4,1)
             # print nx.shortest_path(self.net,src,4)
  
-            path = nx.shortest_path(self.net,src,dst)  
+            path = nx.shortest_path(self.net, src, dst)  
             next = path[path.index(dpid)+1]
             out_port = self.net[dpid][next]['port']
         else:
