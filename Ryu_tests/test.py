@@ -1,6 +1,6 @@
 from ryu.ofproto import ofproto_v1_3, ofproto_v1_3_parser
 from ryu.controller import ofp_event
-from ryu.controller.handler import MAIN_DISPATCHER, set_ev_cls
+from ryu.controller.handler import MAIN_DISPATCHER, CONFIG_DISPATCHER, set_ev_cls
 from ryu.base import app_manager
 
 
@@ -10,8 +10,8 @@ class QueueController(app_manager.RyuApp):
     def __init__(self, *args, **kwargs):
         super(QueueController, self).__init__(*args, **kwargs)
 
-    @set_ev_cls(ofp_event.EventOFPStateChange, [MAIN_DISPATCHER])
-    def state_change_handler(self, ev):
+    @set_ev_cls(ofp_event.EventOFPSwitchFeatures , CONFIG_DISPATCHER)
+    def switch_features_handler(self , ev):
         datapath = ev.msg.datapath
         ofproto = datapath.ofproto 
         parser = datapath.ofproto_parser
