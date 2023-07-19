@@ -23,7 +23,6 @@ class QueueController(app_manager.RyuApp):
                 command=ofproto.OFPFC_ADD, idle_timeout=0, hard_timeout=0,
                 priority=0, instructions=inst)
         datapath.send_msg(mod)
-        port_1 = 3
         queue_1 = parser.OFPActionSetQueue(0)
         actions_1 = [queue_1, parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
 
@@ -45,4 +44,22 @@ class QueueController(app_manager.RyuApp):
             command=ofproto.OFPFC_ADD, idle_timeout=0, hard_timeout=0,
             priority=3, instructions=inst)
         datapath.send_msg(mod)
-        
+        # wrinting a new group table entry that has a queue to limit the bandwidth to 100Mbps
+        queue_2 = parser.OFPActionSetQueue(1)
+        actions_2 = [queue_2, parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
+        weight_2 = 100
+        buckets = [parser.OFPBucket(weight_2, watch_port, watch_group, actions_2)]
+        group_id = 51
+        req = parser.OFPGroupMod(
+            datapath, datapath.ofproto.OFPFC_ADD,
+            datapath.ofproto.OFPGT_SELECT, group_id, buckets)
+        datapath.send_msg(req)
+        # writing a new flow table entry that has a queue to limit the bandwidth to 100Mbps
+        match = parser.OFPMatch(in_port=2)
+        actions = [datapath.ofproto_parser.OFPActionGroup(51)]
+        inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS, actions)]
+        mod = datapath.ofproto_parser.OFPFlowMod(
+            datapath=datapath, match=match, cookie=0,
+            command=ofproto.OFPFC_ADD, idle_timeout=0, hard_timeout=0,
+            priority=3, instructions=inst)
+        datapath.send_msg(mod)

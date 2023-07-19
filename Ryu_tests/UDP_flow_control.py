@@ -158,45 +158,45 @@ class ProjectController(app_manager.RyuApp):
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
         in_port = msg.match['in_port']
- 
-        pkt = packet.Packet(msg.data)
-        eth = pkt.get_protocol(ethernet.ethernet)
- 
-        dst = eth.dst
-        src = eth.src
-        dpid = datapath.id
-        self.mac_to_port.setdefault(dpid, {})
-        # print "nodes"
-        # print self.net.nodes()
-        # print "edges"
-        # print self.net.edges()
-        # self.logger.info("packet in %s %s %s %s", dpid, src, dst, in_port)
-       
-        if src not in self.net:
-            self.net.add_node(src)
-            # self.net.add_edge(dpid, src, {'port': in_port})
-            self.net.add_edge(src, dpid)
-        if dst in self.net:
-            # print (src in self.net)
-            # print nx.shortest_path(self.net,1,4)
-            # print nx.shortest_path(self.net,4,1)
-            # print nx.shortest_path(self.net,src,4)
- 
-            path = nx.shortest_path(self.net, src, dst)  
-            next = path[path.index(dpid)+1]
-            out_port = self.net[dpid][next]['port']
-        else:
-            out_port = ofproto.OFPP_FLOOD
- 
-        actions = [datapath.ofproto_parser.OFPActionOutput(out_port)]
-        # install a flow to avoid packet_in next time
-        if out_port != ofproto.OFPP_FLOOD:
-            self.add_flow(datapath, in_port, dst, actions)
- 
-        out = datapath.ofproto_parser.OFPPacketOut(
-           datapath=datapath, buffer_id=msg.buffer_id, in_port=in_port,
-                    actions=actions)
-        datapath.send_msg(out)
+ # 
+ #        pkt = packet.Packet(msg.data)
+ #        eth = pkt.get_protocol(ethernet.ethernet)
+ # 
+ #        dst = eth.dst
+ #        src = eth.src
+ #        dpid = datapath.id
+ #        self.mac_to_port.setdefault(dpid, {})
+ #        # print "nodes"
+ #        # print self.net.nodes()
+ #        # print "edges"
+ #        # print self.net.edges()
+ #        # self.logger.info("packet in %s %s %s %s", dpid, src, dst, in_port)
+ #       
+ #        if src not in self.net:
+ #            self.net.add_node(src)
+ #            # self.net.add_edge(dpid, src, {'port': in_port})
+ #            self.net.add_edge(src, dpid)
+ #        if dst in self.net:
+ #            # print (src in self.net)
+ #            # print nx.shortest_path(self.net,1,4)
+ #            # print nx.shortest_path(self.net,4,1)
+ #            # print nx.shortest_path(self.net,src,4)
+ # 
+ #            path = nx.shortest_path(self.net, src, dst)  
+ #            next = path[path.index(dpid)+1]
+ #            out_port = self.net[dpid][next]['port']
+ #        else:
+ #            out_port = ofproto.OFPP_FLOOD
+ # 
+ #        actions = [datapath.ofproto_parser.OFPActionOutput(out_port)]
+ #        # install a flow to avoid packet_in next time
+ #        if out_port != ofproto.OFPP_FLOOD:
+ #            self.add_flow(datapath, in_port, dst, actions)
+ # 
+ #        out = datapath.ofproto_parser.OFPPacketOut(
+ #           datapath=datapath, buffer_id=msg.buffer_id, in_port=in_port,
+ #                    actions=actions)
+ #        datapath.send_msg(out)
    
     @set_ev_cls(event.EventSwitchEnter)
     def get_topology_data(self, ev):
