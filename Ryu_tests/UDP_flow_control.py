@@ -29,9 +29,6 @@ class ProjectController(app_manager.RyuApp):
         self.no_of_links = 0
         self.i = 0
   
-    # Handy function that lists all attributes in the given object
-    def ls(self, obj):
-        print("\n".join([x for x in dir(obj) if x[0] != "_"]))
  
     def add_flow(self, datapath, in_port, dst, actions):
         ofproto = datapath.ofproto
