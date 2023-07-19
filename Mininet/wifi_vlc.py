@@ -25,7 +25,6 @@ class SimplePktSwitch(Topo):
     
         info("*** Starting network\n")
         self.build()
-        self.start()
 
 
 def run():
