@@ -37,7 +37,7 @@ class QueueController(app_manager.RyuApp):
             datapath.ofproto.OFPGT_SELECT, group_id, buckets)
         datapath.send_msg(req)
         
-        match = parser.OFPMatch(in_port=1, ipv4_src="10.0.0.1", ipv4_dst="10.0.0.2")
+        match = parser.OFPMatch(in_port=1)
         actions = [datapath.ofproto_parser.OFPActionGroup(50)]
         inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS, actions)]
         mod = datapath.ofproto_parser.OFPFlowMod(
