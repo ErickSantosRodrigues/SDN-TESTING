@@ -60,7 +60,7 @@ class my_controller(app_manager.RyuApp):
         self.add_flow(datapath, 1, match, actions, meter_id=1)
 
         # intercept any UDP packet
-        match = parser.OFPMatch(eth_type=0x0800, ip_proto=17, udp_dst=5555)
+        match = parser.OFPMatch(in_port=4, eth_type=0x0800, ip_proto=17, udp_dst=5555)
         actions = []
         self.add_flow(datapath, 2, match, actions)
 
