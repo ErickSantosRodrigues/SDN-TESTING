@@ -25,7 +25,7 @@ class QueueController(app_manager.RyuApp):
         datapath.send_msg(mod)
         port_1 = 3
         queue_1 = parser.OFPActionSetQueue(0)
-        actions_1 = [queue_1, parser.OFPActionOutput(port_1)]
+        actions_1 = [queue_1, parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
 
         watch_port = ofproto_v1_3.OFPP_ANY
         watch_group = ofproto_v1_3.OFPQ_ALL
