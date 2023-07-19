@@ -3,7 +3,7 @@ from mininet.log import setLogLevel, info
 from mn_wifi.node import OVSKernelAP
 from mn_wifi.cli import CLI
 from mn_wifi.net import Mininet_wifi
-from mn_wifi.topo import Topo
+from mininet.topo import Topo
 from time import sleep
 
 class SimplePktSwitch(Topo):
