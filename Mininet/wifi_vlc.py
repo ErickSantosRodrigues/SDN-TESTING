@@ -3,7 +3,7 @@ from mininet.log import setLogLevel, info
 from mn_wifi.node import OVSKernelAP
 from mn_wifi.cli import CLI
 from mn_wifi.net import Mininet_wifi
-from mininet.topo import Topo
+from mn_wifi.topo import Topo
 from time import sleep
 
 class SimplePktSwitch(Topo):
@@ -17,7 +17,6 @@ class SimplePktSwitch(Topo):
         sta3 = self.addStation('sta3')
         sta4 = self.addStation('sta4')
         ap1 = self.addAccessPoint('ap1', ssid='new-ssid', mode='g', channel='1', position='50,50,0')
-        c1 = self.addController('c1')
     
         info("*** Configuring WiFi nodes\n")
         self.configureWifiNodes()
