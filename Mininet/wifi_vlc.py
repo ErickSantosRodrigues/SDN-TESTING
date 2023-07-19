@@ -30,9 +30,7 @@ class SimplePktSwitch(Topo):
 def run():
     net = Mininet_wifi(topo=SimplePktSwitch(), controller=RemoteController('c', '127.0.0.1', 6653, protocols="OpenFlow13"))
     net.start()
-    for sta in net.stations:
-        sta.cmd("ifconfig %s-eth1 10.0.0.%s" % (sta.name, sta.name[-1]))
-    # sta1, sta2, sta3, sta4 = net.hosts[0], net.hosts[1], net.hosts[2], net.hosts[3]
+    sta1, sta2, sta3, sta4 = net.stations[0], net.stations[1], net.stations[2], net.stations[3]
     # print(f"h1 MAC: {h1.MAC()}\nh2 MAC: {h2.MAC()}\nh3 MAC: {h3.MAC()}\nh4 MAC: {h4.MAC()}")
 
     # h1.cmd("ovs-vsctl -- set Port s1-eth1 qos=@newqos -- --id=@newqos create QoS type=linux-htb other-config:max-rate=10000000 queues=0=@q0,1=@q1 -- --id=@q0 create Queue other-config:min-rate=1000000 other-config:max-rate=1000000 -- --id=@q1 create Queue other-config:min-rate=9000000 other-config:max-rate=9000000")
