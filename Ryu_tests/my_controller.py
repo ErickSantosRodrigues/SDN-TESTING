@@ -59,6 +59,11 @@ class my_controller(app_manager.RyuApp):
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
         self.add_flow(datapath, 1, match, actions, meter_id=1)
 
+        # intercept any UDP packet
+        match = parser.OFPMatch(eth_type=0x0800, ip_proto=17)
+        actions = [parser.OFPActionOutput()]
+        self.add_flow(datapath, 2, match, actions)
+
     def add_flow(self, datapath, priority, match, actions, buffer_id=None, meter_id=None, command=None):
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
@@ -79,9 +84,6 @@ class my_controller(app_manager.RyuApp):
                                     match=match, instructions=inst, command=command)
         datapath.send_msg(mod)
         self.logger.info("Flow added")
-        # Add a barrier request to ensure the flow modification is executed before continuing
-        barrier_req = parser.OFPBarrierRequest(datapath)
-        datapath.send_msg(barrier_req)
 
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def _packet_in_handler(self, ev):
@@ -103,12 +105,6 @@ class my_controller(app_manager.RyuApp):
             return
         dst = eth.dst
         src = eth.src
+        
 
-        self.port2_in_communication = True if in_port == 3 else False
-        match = parser.OFPMatch(in_port=2)
-        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
-        if self.port2_in_communication:
-            self.add_flow(datapath, 2, match, actions, meter_id=2)
-        else:
-            self.add_flow(datapath, 1, match, actions, meter_id=1)
 
