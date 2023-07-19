@@ -18,9 +18,6 @@ class SimplePktSwitch(Topo):
         sta4 = self.addStation('sta4')
         ap1 = self.addAccessPoint('ap1', ssid='new-ssid', mode='g', channel='1', position='50,50,0')
     
-        info("*** Configuring WiFi nodes\n")
-        self.configureWifiNodes()
-    
         info("*** Associating Stations\n")
         self.addLink(sta1, ap1)
         self.addLink(sta2, ap1)
