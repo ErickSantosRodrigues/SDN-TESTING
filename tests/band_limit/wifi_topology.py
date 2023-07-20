@@ -1,4 +1,4 @@
-from mininet.node import RemoteController, OVSSwitch, CPULimitedHost
+from mininet.node import RemoteController
 from mininet.log import setLogLevel, info
 from mn_wifi.node import OVSKernelAP
 from mn_wifi.cli import CLI
@@ -11,9 +11,9 @@ class Wifi_band_limit_Topo(Topo):
     def __init__(self, **opts):
         Topo.__init__(self, **opts)
         info("*** Creating nodes\n")
-        sta1 = self.addStation('sta1')
-        sta2 = self.addStation('sta2')
-        sta3 = self.addStation('sta3')
+        sta1 = self.addStation('sta1', ip='10.0.0.1/24')
+        sta2 = self.addStation('sta2', ip='10.0.0.2/24')
+        sta3 = self.addStation('sta3', ip='10.0.0.3/24')
         ap1 = self.addAccessPoint('ap1', ssid='new-ssid', mode='g', channel='1', position='50,50,0')
     
         info("*** Associating Stations\n")
@@ -21,8 +21,6 @@ class Wifi_band_limit_Topo(Topo):
         self.addLink(sta2, ap1)
         self.addLink(sta3, ap1)
     
-        self.build()
-
 
 def run():
     net = Mininet_wifi(topo=Wifi_band_limit_Topo(), controller=RemoteController('c', '127.0.0.1', 6653, protocols="OpenFlow13"))
