@@ -6,6 +6,7 @@ from mn_wifi.net import Mininet_wifi
 from mn_wifi.topo import Topo
 from time import sleep
 
+
 class SimplePktSwitch(Topo):
     """Simple topology example."""
     def __init__(self, **opts):
@@ -22,8 +23,8 @@ class SimplePktSwitch(Topo):
         self.addLink(sta1, ap1)
         self.addLink(sta2, ap1)
         self.addLink(sta3, ap1)
+        self.addLink(sta4, ap1)
     
-        info("*** Starting network\n")
         self.build()
 
 

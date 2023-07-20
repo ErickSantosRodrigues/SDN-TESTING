@@ -49,14 +49,15 @@ class Controller_drop_h2(app_manager.RyuApp):
                    parser.OFPActionOutput(ofproto.OFPP_CONTROLLER)]
         self.add_flow(datapath, 1, match, actions, meter_id=1)
 
-        self.logger.info(f"Switch {dpid_lib.dpid_to_str(datapath.id)} ready")
-
     def add_flow(self, datapath, priority, match, actions, buffer_id=None, meter_id=None, command=None, idle_timeout=0):
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
-
-        inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS,
-                                             actions)]
+        
+        if actions == []:
+            inst = [parser.OFPInstructionActions(ofproto.OFPIT_CLEAR_ACTIONS, [])]
+        else:
+            inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS,
+                                                 actions)]
         if meter_id is not None:
             inst.append(parser.OFPInstructionMeter(meter_id=meter_id))
 
@@ -70,12 +71,8 @@ class Controller_drop_h2(app_manager.RyuApp):
             mod = parser.OFPFlowMod(datapath=datapath, priority=priority,
                                     match=match, instructions=inst, command=command, idle_timeout=idle_timeout)
         datapath.send_msg(mod)
-        # if command == ofproto.OFPFC_ADD:
-        #     self.logger.info(f"Flow added: {match} -> {actions}")
-        # elif command == ofproto.OFPFC_REMOVE:
-        #     self.logger.info(f"Flow removed: {match} -> {actions}")
-        # elif command == ofproto.OFPFC_MODIFY:
-        #     self.logger.info(f"Flow modified: {match} -> {actions}")
+        if command == ofproto.OFPFC_ADD:
+            self.logger.info(f"Flow added: {match} -> {actions}")
 
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def packet_in_handler(self, ev):
@@ -88,7 +85,7 @@ class Controller_drop_h2(app_manager.RyuApp):
             match = parser.OFPMatch(in_port=2)
             # Drop the packets from h2
             actions = []
-            self.add_flow(datapath, 2, match, actions, idle_timeout=1)
+            self.add_flow(datapath, 2, match, actions, idle_timeout=3)
 
     @handler.set_ev_cls(ofp_event.EventOFPFlowRemoved, MAIN_DISPATCHER)
     def flow_removed_handler(self, ev):
