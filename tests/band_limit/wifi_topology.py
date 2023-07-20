@@ -6,6 +6,7 @@ from mn_wifi.net import Mininet_wifi
 from mn_wifi.topo import Topo
 from time import sleep
 
+
 class Wifi_band_limit_Topo(Topo):
     def __init__(self, **opts):
         Topo.__init__(self, **opts)
@@ -24,7 +25,7 @@ class Wifi_band_limit_Topo(Topo):
 
 
 def run():
-    net = Mininet_wifi(topo=Wifi_band_limit_Topo(), host=CPULimitedHost, controller=RemoteController('c', '127.0.0.1', 6653, protocols="OpenFlow13"))
+    net = Mininet_wifi(topo=Wifi_band_limit_Topo(), controller=RemoteController('c', '127.0.0.1', 6653, protocols="OpenFlow13"))
     net.start()
     sta1, sta2, sta3 = net.stations[0], net.stations[1], net.stations[2]
     net.pingAll()
