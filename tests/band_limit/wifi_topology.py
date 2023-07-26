@@ -14,7 +14,7 @@ class Wifi_band_limit_Topo(Topo):
         sta1 = self.addStation('sta1', ip='10.0.0.1/24')
         sta2 = self.addStation('sta2', ip='10.0.0.2/24')
         sta3 = self.addStation('sta3', ip='10.0.0.3/24')
-        ap1 = self.addAccessPoint('ap1', ssid='new-ssid', mode='g', channel='1', position='50,50,0')
+        ap1 = self.addAccessPoint('ap1', ssid='new-ssid', mode='ac', channel='1', position='50,50,0')
     
         info("*** Associating Stations\n")
         self.addLink(sta1, ap1)
