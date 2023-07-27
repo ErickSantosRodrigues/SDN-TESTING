@@ -21,7 +21,7 @@ class NS_controller_100mbs(app_manager.RyuApp):
         meter_mod = parser.OFPMeterMod(datapath=datapath,
                                         command=ofproto.OFPMC_ADD,
                                         flags=ofproto.OFPMF_KBPS, meter_id=1,
-                                        bands=[parser.OFPMeterBandDrop(rate=100,
+                                        bands=[parser.OFPMeterBandDrop(rate=100_000,
                                                                         burst_size=0)])
         datapath.send_msg(meter_mod)
         # add a second meter entry with a rate limit of 100 Mbs
