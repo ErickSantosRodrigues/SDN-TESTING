@@ -47,6 +47,23 @@ class NS_controller_100mbs(app_manager.RyuApp):
         match = parser.OFPMatch(ipv4_dst='10.0.0.3')
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
         self.add_flow(datapath, 1, match, actions, meter_id=1)
+        
+        # allow communication of port 1 in case of TCP
+        match = parser.OFPMatch(in_port=1, eth_type=ether_types.ETH_TYPE_IP, ip_proto=6)
+        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
+        self.add_flow(datapath, 1, match, actions, meter_id=1)
+        # allow communication of port 1 in case of UDP
+        match = parser.OFPMatch(in_port=1, eth_type=ether_types.ETH_TYPE_IP, ip_proto=17)
+        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
+        self.add_flow(datapath, 1, match, actions, meter_id=1)
+        # allow communication of port 1 in case of ICMP
+        match = parser.OFPMatch(in_port=1, eth_type=ether_types.ETH_TYPE_IP, ip_proto=1)
+        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
+        self.add_flow(datapath, 1, match, actions, meter_id=1)
+        # allow communication of port 1 in case of ARP
+        match = parser.OFPMatch(in_port=1, eth_type=ether_types.ETH_TYPE_ARP)
+        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
+        self.add_flow(datapath, 1, match, actions, meter_id=1)
 
     def add_flow(self, datapath, priority, match, actions, buffer_id=None, meter_id=None, command=None):
         ofproto = datapath.ofproto
