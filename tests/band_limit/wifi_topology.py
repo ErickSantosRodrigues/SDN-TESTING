@@ -15,7 +15,7 @@ class Wifi_band_limit_Topo(Topo):
         sta2 = self.addStation('sta2', ip='10.0.0.2/24', mac='00:00:00:00:00:02')
         sta3 = self.addStation('sta3', ip='10.0.0.3/24', mac='00:00:00:00:00:03')
 
-        ap_arg = {'client_isolation': True}
+        # ap_arg = {'client_isolation': True}
         ap1 = self.addAccessPoint('ap1', ssid='new-ssid', mode='ac', channel='36', position='50,50,0', **ap_arg)
     
         info("*** Associating Stations\n")
@@ -25,7 +25,7 @@ class Wifi_band_limit_Topo(Topo):
     
 
 def run():
-    net = Mininet_wifi(topo=Wifi_band_limit_Topo(), controller=RemoteController('c', '127.0.0.1', 6653, protocols="OpenFlow13"))
+    net = Mininet_wifi(topo=Wifi_band_limit_Topo(), controller=RemoteController('c', '127.0.0.1', 6653, protocols="OpenFlow13"), accessPoint=OVSKernelAP)
     net.start()
     sta1, sta2, sta3 = net.stations[0], net.stations[1], net.stations[2]
     net.pingAll()
