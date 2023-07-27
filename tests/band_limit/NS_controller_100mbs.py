@@ -17,20 +17,20 @@ class NS_controller_100mbs(app_manager.RyuApp):
         datapath = ev.msg.datapath
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
-        # # add a meter entry with a rate limit of 100 Mbs
-        # meter_mod = parser.OFPMeterMod(datapath=datapath,
-        #                                 command=ofproto.OFPMC_ADD,
-        #                                 flags=ofproto.OFPMF_KBPS, meter_id=1,
-        #                                 bands=[parser.OFPMeterBandDrop(rate=100_0,
-        #                                                                 burst_size=0)])
-        # datapath.send_msg(meter_mod)
-        # # add a second meter entry with a rate limit of 100 Mbs
-        # meter_mod = parser.OFPMeterMod(datapath=datapath,
-        #                                 command=ofproto.OFPMC_ADD,
-        #                                 flags=ofproto.OFPMF_KBPS, meter_id=2,
-        #                                 bands=[parser.OFPMeterBandDrop(rate=100_0,
-        #                                                                 burst_size=0)])
-        # datapath.send_msg(meter_mod)
+        # add a meter entry with a rate limit of 100 Mbs
+        meter_mod = parser.OFPMeterMod(datapath=datapath,
+                                        command=ofproto.OFPMC_ADD,
+                                        flags=ofproto.OFPMF_KBPS, meter_id=1,
+                                        bands=[parser.OFPMeterBandDrop(rate=100_0,
+                                                                        burst_size=0)])
+        datapath.send_msg(meter_mod)
+        # add a second meter entry with a rate limit of 100 Mbs
+        meter_mod = parser.OFPMeterMod(datapath=datapath,
+                                        command=ofproto.OFPMC_ADD,
+                                        flags=ofproto.OFPMF_KBPS, meter_id=2,
+                                        bands=[parser.OFPMeterBandDrop(rate=100_0,
+                                                                        burst_size=0)])
+        datapath.send_msg(meter_mod)
         match = parser.OFPMatch()
         actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
                                           ofproto.OFPCML_NO_BUFFER)]
@@ -38,15 +38,15 @@ class NS_controller_100mbs(app_manager.RyuApp):
 
         match = parser.OFPMatch(in_port=1)
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
-        self.add_flow(datapath, 1, match, actions)
+        self.add_flow(datapath, 1, match, actions, meter_id=1)
 
         match = parser.OFPMatch(in_port=2)
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
-        self.add_flow(datapath, 1, match, actions)
+        self.add_flow(datapath, 1, match, actions, meter_id=2)
 
         match = parser.OFPMatch(in_port=3)
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
-        self.add_flow(datapath, 1, match, actions)
+        self.add_flow(datapath, 1, match, actions, meter_id=1)
 
     def add_flow(self, datapath, priority, match, actions, buffer_id=None, meter_id=None, command=None):
         ofproto = datapath.ofproto
