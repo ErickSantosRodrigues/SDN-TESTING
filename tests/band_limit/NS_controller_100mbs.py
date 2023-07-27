@@ -17,20 +17,20 @@ class NS_controller_100mbs(app_manager.RyuApp):
         datapath = ev.msg.datapath
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
-        # add a meter entry with a rate limit of 100 Mbs
-        meter_mod = parser.OFPMeterMod(datapath=datapath,
-                                        command=ofproto.OFPMC_ADD,
-                                        flags=ofproto.OFPMF_KBPS, meter_id=1,
-                                        bands=[parser.OFPMeterBandDrop(rate=100_0,
-                                                                        burst_size=0)])
-        datapath.send_msg(meter_mod)
-        # add a second meter entry with a rate limit of 100 Mbs
-        meter_mod = parser.OFPMeterMod(datapath=datapath,
-                                        command=ofproto.OFPMC_ADD,
-                                        flags=ofproto.OFPMF_KBPS, meter_id=2,
-                                        bands=[parser.OFPMeterBandDrop(rate=100_0,
-                                                                        burst_size=0)])
-        datapath.send_msg(meter_mod)
+        # # add a meter entry with a rate limit of 100 Mbs
+        # meter_mod = parser.OFPMeterMod(datapath=datapath,
+        #                                 command=ofproto.OFPMC_ADD,
+        #                                 flags=ofproto.OFPMF_KBPS, meter_id=1,
+        #                                 bands=[parser.OFPMeterBandDrop(rate=100_0,
+        #                                                                 burst_size=0)])
+        # datapath.send_msg(meter_mod)
+        # # add a second meter entry with a rate limit of 100 Mbs
+        # meter_mod = parser.OFPMeterMod(datapath=datapath,
+        #                                 command=ofproto.OFPMC_ADD,
+        #                                 flags=ofproto.OFPMF_KBPS, meter_id=2,
+        #                                 bands=[parser.OFPMeterBandDrop(rate=100_0,
+        #                                                                 burst_size=0)])
+        # datapath.send_msg(meter_mod)
         match = parser.OFPMatch()
         actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
                                           ofproto.OFPCML_NO_BUFFER)]
