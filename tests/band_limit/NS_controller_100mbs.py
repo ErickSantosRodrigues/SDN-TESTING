@@ -38,15 +38,15 @@ class NS_controller_100mbs(app_manager.RyuApp):
 
         match = parser.OFPMatch(in_port=1)
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
-        self.add_flow(datapath, 1, match, actions, meter_id=1)
+        self.add_flow(datapath, 1, match, actions)
 
         match = parser.OFPMatch(in_port=2)
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
-        self.add_flow(datapath, 1, match, actions, meter_id=2)
+        self.add_flow(datapath, 1, match, actions)
 
         match = parser.OFPMatch(in_port=3)
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
-        self.add_flow(datapath, 1, match, actions, meter_id=1)
+        self.add_flow(datapath, 1, match, actions)
 
     def add_flow(self, datapath, priority, match, actions, buffer_id=None, meter_id=None, command=None):
         ofproto = datapath.ofproto
