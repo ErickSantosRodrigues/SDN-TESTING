@@ -36,15 +36,15 @@ class NS_controller_100mbs(app_manager.RyuApp):
                                           ofproto.OFPCML_NO_BUFFER)]
         self.add_flow(datapath, 0, match, actions)
 
-        match = parser.OFPMatch(in_port=1)
+        match = parser.OFPMatch(ipv4_dst='10.0.0.1')
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
         self.add_flow(datapath, 1, match, actions, meter_id=1)
 
-        match = parser.OFPMatch(in_port=2)
+        match = parser.OFPMatch(ipv4_dst='10.0.0.2')
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
         self.add_flow(datapath, 1, match, actions, meter_id=2)
 
-        match = parser.OFPMatch(in_port=3)
+        match = parser.OFPMatch(ipv4_dst='10.0.0.3')
         actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
         self.add_flow(datapath, 1, match, actions, meter_id=1)
 
