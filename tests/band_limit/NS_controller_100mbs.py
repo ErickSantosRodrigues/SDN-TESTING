@@ -92,8 +92,6 @@ class NS_controller_100mbs(app_manager.RyuApp):
         datapath = msg.datapath
         pkt = packet.Packet(msg.data)
         eth = pkt.get_protocol(ethernet.ethernet)
-        ofproto = datapath.ofproto_v1_3
-        parser = datapath.ofproto_parser
         in_port = msg.match['in_port']
         self.logger.info(f"Packet in {eth.src} {eth.dst} {in_port}")
 
