@@ -21,7 +21,7 @@ class NS_controller_100mbs(app_manager.RyuApp):
         meter_mod = parser.OFPMeterMod(datapath=datapath,
                                         command=ofproto.OFPMC_ADD,
                                         flags=ofproto.OFPMF_KBPS, meter_id=1,
-                                        bands=[parser.OFPMeterBandDrop(rate=100_000,
+                                        bands=[parser.OFPMeterBandDrop(rate=100_00,
                                                                         burst_size=0)])
         datapath.send_msg(meter_mod)
         # add a second meter entry with a rate limit of 100 Mbs
@@ -37,7 +37,7 @@ class NS_controller_100mbs(app_manager.RyuApp):
         self.add_flow(datapath, 0, match, actions)
         # allow all communication from port 1
         match = parser.OFPMatch(in_port=1)
-        actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT)]
+        actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT, ofproto.OFPP_CONTROLLER)]
         self.add_flow(datapath, 1, match, actions, meter_id=1)
         # disiable all communication of mac address 00:00:00:00:00:02
         match = parser.OFPMatch(eth_dst='00:00:00:00:00:02')
