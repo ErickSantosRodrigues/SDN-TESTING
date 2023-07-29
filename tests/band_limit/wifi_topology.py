@@ -11,12 +11,12 @@ class Wifi_band_limit_Topo(Topo):
     def __init__(self, **opts):
         Topo.__init__(self, **opts)
         info("*** Creating nodes\n")
-        sta1 = self.addStation('sta1', ip='10.0.0.1/24', mac='00:00:00:00:00:01')
-        sta2 = self.addStation('sta2', ip='10.0.0.2/24', mac='00:00:00:00:00:02')
-        sta3 = self.addStation('sta3', ip='10.0.0.3/24', mac='00:00:00:00:00:03')
+        sta1 = self.addStation('sta1', ip='10.0.0.1/24', mac='00:00:00:00:00:01', position='40,40,0')
+        sta2 = self.addStation('sta2', ip='10.0.0.2/24', mac='00:00:00:00:00:02', position='60,60,0')
+        sta3 = self.addStation('sta3', ip='10.0.0.3/24', mac='00:00:00:00:00:03', position='80,80,0')
 
         ap_arg = {'client_isolation': True}
-        ap1 = self.addAccessPoint('ap1', ssid='new-ssid', mode='ax', channel='1', position='50,50,0', **ap_arg)
+        ap1 = self.addAccessPoint('ap1', ssid='new-ssid', mode='ac', channel='36', position='50,50,0', **ap_arg)
     
         info("*** Associating Stations\n")
         self.addLink(sta1, ap1)
