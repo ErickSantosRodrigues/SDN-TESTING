@@ -16,9 +16,9 @@ class Wifi_band_limit_Topo(Topo):
         ap1 = self.addAccessPoint('ap1', ssid='new-ssid', mode='g', channel='1', position='50,50,0')
     
         info("*** Associating Stations\n")
-        self.addLink(sta1, ap1)
-        self.addLink(sta2, ap1)
-        self.addLink(sta3, ap1)
+        self.addLink(sta1, ap1, bw=150)
+        self.addLink(sta2, ap1, bw=150)
+        self.addLink(sta3, ap1, bw=150)
     
         self.build()
 
@@ -28,7 +28,7 @@ def run():
     net.start()
     sta1, sta2, sta3 = net.stations[0], net.stations[1], net.stations[2]
     net.pingAll()
-    sta1.cmd('''xterm -geometry 80x24+0+0 -hold -T "sta1_5002" -e "iperf3 -s --port 5002 > server2.txt" &''')
+    sta1.cmd('''xterm -geometry 80x24+0+0 -hold -T "sta1_5002" -e "iperf3 -s --port 5002 > server1.txt" &''')
     sta1.cmd('''xterm -geometry 80x24+625+0 -hold -T "sta1_5003" -e "iperf3 -s --port 5003 > server2.txt" &''')
     sleep(5)
     sta2.cmd('''xterm -geometry 80x24+0+380 -hold -T "sta2" -e "iperf3 -c 10.0.0.1 --port 5002 -t 60 -i 60"&''')
