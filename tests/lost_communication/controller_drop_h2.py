@@ -35,20 +35,18 @@ class Controller_drop_h2(app_manager.RyuApp):
         actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
                                           ofproto.OFPCML_NO_BUFFER)]
         self.add_flow(datapath, 0, match, actions)
-
+        # allow all communication from port 1
         match = parser.OFPMatch(in_port=1)
-        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
-        self.add_flow(datapath, 1, match, actions, meter_id=1)
-
-        match = parser.OFPMatch(in_port=2)
-        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL)]
-        self.add_flow(datapath, 1, match, actions, meter_id=2)
-
-        match = parser.OFPMatch(in_port=3)
-        actions = [parser.OFPActionOutput(ofproto.OFPP_NORMAL),
-                   parser.OFPActionOutput(ofproto.OFPP_CONTROLLER)]
-        self.add_flow(datapath, 1, match, actions, meter_id=1)
-
+        actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT), parser.OFPActionOutput(ofproto.OFPP_CONTROLLER)]
+        self.add_flow(datapath, 1, match, actions)
+        # allow all communication from port 1
+        match = parser.OFPMatch(eth_dst='00:00:00:00:00:01', eth_src='00:00:00:00:00:02')
+        actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT)]
+        self.add_flow(datapath, 2, match, actions, meter_id=1)
+        # disiable all communication of mac address 00:00:00:00:00:02
+        match = parser.OFPMatch(eth_dst='00:00:00:00:00:01', eth_src='00:00:00:00:00:03')
+        actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT)]
+        self.add_flow(datapath, 2, match, actions, meter_id=2)
         self.logger.info(f"Switch {dpid_lib.dpid_to_str(datapath.id)} ready")
 
     def add_flow(self, datapath, priority, match, actions, buffer_id=None, meter_id=None, command=None, idle_timeout=0):
@@ -83,12 +81,12 @@ class Controller_drop_h2(app_manager.RyuApp):
         datapath = msg.datapath
         pkt = packet.Packet(msg.data)
         eth = pkt.get_protocol(ethernet.ethernet)
-        if msg.match['in_port'] == 3:
+        if msg.match['eth_dst'] == '00:00:00:00:00:03' or msg.match['eth_src'] == '00:00:00:00:00:03':
             parser = datapath.ofproto_parser
-            match = parser.OFPMatch(in_port=2)
+            match = parser.OFPMatch(eth_dst='00:00:00:00:00:01', eth_src='00:00:00:00:00:02')
             # Drop the packets from h2
             actions = []
-            self.add_flow(datapath, 2, match, actions, idle_timeout=1)
+            self.add_flow(datapath, 3, match, actions, idle_timeout=1)
 
     @handler.set_ev_cls(ofp_event.EventOFPFlowRemoved, MAIN_DISPATCHER)
     def flow_removed_handler(self, ev):
