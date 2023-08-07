@@ -75,10 +75,10 @@ class Controller_drop_h2(app_manager.RyuApp):
         self.logger.info(f"Packet in {eth.src} {eth.dst} {in_port}")
         if eth.dst == '00:00:00:00:00:03' or eth.src == '00:00:00:00:00:03':
             parser = datapath.ofproto_parser
-            match = parser.OFPMatch(eth_dst='00:00:00:00:00:01', eth_src='00:00:00:00:00:02')
+            match = parser.OFPMatch(eth_src='00:00:00:00:00:01', eth_dst='00:00:00:00:00:02')
             # Drop the packets from h2
             actions = []
-            self.add_flow(datapath, 3, match, actions, idle_timeout=1)
+            self.add_flow(datapath, 3, match, actions, idle_timeout=3)
 
     @handler.set_ev_cls(ofp_event.EventOFPFlowRemoved, MAIN_DISPATCHER)
     def flow_removed_handler(self, ev):
