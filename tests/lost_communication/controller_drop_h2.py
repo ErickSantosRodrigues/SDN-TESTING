@@ -31,10 +31,6 @@ class Controller_drop_h2(app_manager.RyuApp):
                                         bands=[parser.OFPMeterBandDrop(rate=100_000,
                                                                         burst_size=0)])
         datapath.send_msg(meter_mod)
-        match = parser.OFPMatch()
-        actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
-                                          ofproto.OFPCML_NO_BUFFER)]
-        self.add_flow(datapath, 0, match, actions)
         # allow all communication from port 1
         match = parser.OFPMatch(in_port=1)
         actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT), parser.OFPActionOutput(ofproto.OFPP_CONTROLLER)]
@@ -47,7 +43,6 @@ class Controller_drop_h2(app_manager.RyuApp):
         match = parser.OFPMatch(eth_dst='00:00:00:00:00:01', eth_src='00:00:00:00:00:03')
         actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT)]
         self.add_flow(datapath, 2, match, actions, meter_id=2)
-        self.logger.info(f"Switch {dpid_lib.dpid_to_str(datapath.id)} ready")
 
     def add_flow(self, datapath, priority, match, actions, buffer_id=None, meter_id=None, command=None, idle_timeout=0):
         ofproto = datapath.ofproto
@@ -77,13 +72,13 @@ class Controller_drop_h2(app_manager.RyuApp):
         pkt = packet.Packet(msg.data)
         eth = pkt.get_protocol(ethernet.ethernet)
         in_port = msg.match['in_port']
+        self.logger.info(f"Packet in {eth.src} {eth.dst} {in_port}")
         if msg.match['eth_dst'] == '00:00:00:00:00:03' or msg.match['eth_src'] == '00:00:00:00:00:03':
             parser = datapath.ofproto_parser
             match = parser.OFPMatch(eth_dst='00:00:00:00:00:01', eth_src='00:00:00:00:00:02')
             # Drop the packets from h2
             actions = []
             self.add_flow(datapath, 3, match, actions, idle_timeout=1)
-        self.logger.info(f"Packet in {eth.src} {eth.dst} {in_port}")
 
     @handler.set_ev_cls(ofp_event.EventOFPFlowRemoved, MAIN_DISPATCHER)
     def flow_removed_handler(self, ev):
