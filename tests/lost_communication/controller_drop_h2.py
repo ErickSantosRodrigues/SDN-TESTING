@@ -36,11 +36,11 @@ class Controller_drop_h2(app_manager.RyuApp):
         actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT), parser.OFPActionOutput(ofproto.OFPP_CONTROLLER)]
         self.add_flow(datapath, 1, match, actions)
         # allow all communication from port 1
-        match = parser.OFPMatch(eth_dst='00:00:00:00:00:01', eth_src='00:00:00:00:00:02')
+        match = parser.OFPMatch(eth_src='00:00:00:00:00:01', eth_dst='00:00:00:00:00:02')
         actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT)]
         self.add_flow(datapath, 2, match, actions, meter_id=1)
         # disiable all communication of mac address 00:00:00:00:00:02
-        match = parser.OFPMatch(eth_dst='00:00:00:00:00:01', eth_src='00:00:00:00:00:03')
+        match = parser.OFPMatch(eth_src='00:00:00:00:00:01', eth_dst='00:00:00:00:00:03')
         actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT), parser.OFPActionOutput(ofproto.OFPP_CONTROLLER)]
         self.add_flow(datapath, 2, match, actions, meter_id=2)
 
@@ -73,9 +73,9 @@ class Controller_drop_h2(app_manager.RyuApp):
         eth = pkt.get_protocol(ethernet.ethernet)
         in_port = msg.match['in_port']
         self.logger.info(f"Packet in {eth.src} {eth.dst} {in_port}")
-        if eth.dst == '00:00:00:00:00:01' and eth.src == '00:00:00:00:00:03':
+        if eth.src == '00:00:00:00:00:01' and eth.dst == '00:00:00:00:00:03':
             parser = datapath.ofproto_parser
-            match = parser.OFPMatch(eth_dst='00:00:00:00:00:01', eth_src='00:00:00:00:00:02')
+            match = parser.OFPMatch(eth_src='00:00:00:00:00:01', eth_dst='00:00:00:00:00:02')
             # Drop the packets from h2
             actions = []
             self.add_flow(datapath, 3, match, actions, idle_timeout=1)
