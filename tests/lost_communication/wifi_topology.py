@@ -10,9 +10,9 @@ class Wifi_band_limit_Topo(Topo):
     def __init__(self, **opts):
         Topo.__init__(self, **opts)
         info("*** Creating nodes\n")
-        sta1 = self.addStation('sta1')
-        sta2 = self.addStation('sta2')
-        sta3 = self.addStation('sta3')
+        sta1 = self.addStation('sta1', mac='00:00:00:00:00:01')
+        sta2 = self.addStation('sta2', mac='00:00:00:00:00:02')
+        sta3 = self.addStation('sta3', mac='00:00:00:00:00:03')
         ap1 = self.addAccessPoint('ap1', ssid='new-ssid', mode='g', channel='1', position='50,50,0')
     
         info("*** Associating Stations\n")
