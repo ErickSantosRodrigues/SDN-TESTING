@@ -68,12 +68,12 @@ class Controller_drop_h2(app_manager.RyuApp):
             mod = parser.OFPFlowMod(datapath=datapath, priority=priority,
                                     match=match, instructions=inst, command=command, idle_timeout=idle_timeout)
         datapath.send_msg(mod)
-        # if command == ofproto.OFPFC_ADD:
-        #     self.logger.info(f"Flow added: {match} -> {actions}")
-        # elif command == ofproto.OFPFC_REMOVE:
-        #     self.logger.info(f"Flow removed: {match} -> {actions}")
-        # elif command == ofproto.OFPFC_MODIFY:
-        #     self.logger.info(f"Flow modified: {match} -> {actions}")
+        if command == ofproto.OFPFC_ADD:
+            self.logger.info(f"Flow added: {match} -> {actions}")
+        elif command == ofproto.OFPFC_REMOVE:
+            self.logger.info(f"Flow removed: {match} -> {actions}")
+        elif command == ofproto.OFPFC_MODIFY:
+            self.logger.info(f"Flow modified: {match} -> {actions}")
 
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def packet_in_handler(self, ev):
