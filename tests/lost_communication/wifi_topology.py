@@ -30,7 +30,7 @@ def run():
     net.pingAll()
     sta1.cmd('''xterm -geometry 80x24+0+0 -hold -T "sta1_5002" -e "iperf3 -s --port 5002 > server1.txt" &''')
     sta1.cmd('''xterm -geometry 80x24+625+0 -hold -T "sta1_5003" -e "iperf3 -s --port 5003 > server2.txt" &''')
-    sleep(5)
+    sleep(20)
     sta2.cmd('''xterm -geometry 80x24+0+380 -hold -T "sta2" -e "iperf3 -c 10.0.0.1 --port 5002 -t 60 -i 60"&''')
     sleep(10)
     sta3.cmd('''xterm -geometry 80x24+625+380 -hold -T "sta3" -e "iperf3 -c 10.0.0.1 --port 5003 -t 20 -i 20" &''')
