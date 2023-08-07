@@ -73,7 +73,7 @@ class Controller_drop_h2(app_manager.RyuApp):
         eth = pkt.get_protocol(ethernet.ethernet)
         in_port = msg.match['in_port']
         self.logger.info(f"Packet in {eth.src} {eth.dst} {in_port}")
-        if msg.match['eth_dst'] == '00:00:00:00:00:03' or msg.match['eth_src'] == '00:00:00:00:00:03':
+        if eth.dst == '00:00:00:00:00:03' or eth.src == '00:00:00:00:00:03':
             parser = datapath.ofproto_parser
             match = parser.OFPMatch(eth_dst='00:00:00:00:00:01', eth_src='00:00:00:00:00:02')
             # Drop the packets from h2
