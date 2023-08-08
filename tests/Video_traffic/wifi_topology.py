@@ -25,8 +25,6 @@ class Wifi_video_traffic(Topo):
         self.addLink(sta3, ap1, bw=150)
         self.addLink(sta4, ap1, bw=150)
     
-        self.build()
-
 
 def run():
     net = Mininet_wifi(topo=Wifi_video_traffic(), host=CPULimitedHost, controller=RemoteController('c', '127.0.0.1', 6653, protocols="OpenFlow13"))
@@ -38,6 +36,7 @@ def run():
     sta1.cmd('''xterm -geometry 80x24+0+0 -hold -T "sta1_stream_A" -e "cvlc -vvv ../videos/test.mp4 --sout '#standard{access=http, mux=ts,dst=:8080}' --no-sout-rtp-sap --no-sout-standard-sap --ttl=1 --sout-keep --loop" &''')
     sta4.cmd('''xterm -geometry 80x24+650+0 -hold -T "sta4_stream_B" -e "cvlc -vvv ../videos/test2.mp4 --sout '#standard{access=http, mux=ts,dst=:8081}' --no-sout-rtp-sap --no-sout-standard-sap --ttl=1 --sout-keep --loop" &''')
 
+    sleep(6)
     sta2.cmd("xterm -geometry 80x24+0+380 -hold -T 'sta2' -e 'vlc http://10.0.0.1:8080' &")
 
     sleep(6)
