@@ -27,7 +27,7 @@ class Wifi_video_traffic(Topo):
     
 
 def run():
-    net = Mininet_wifi(topo=Wifi_video_traffic(), host=CPULimitedHost, controller=RemoteController('c', '127.0.0.1', 6653, protocols="OpenFlow13"))
+    net = Mininet_wifi(topo=Wifi_video_traffic(), host=CPULimitedHost, controller=RemoteController('c', '127.0.0.1', 6653, protocols="OpenFlow13"), accessPoint=OVSKernelAP)
     net.start()
     sta1, sta2, sta3, sta4 = net.stations
 
