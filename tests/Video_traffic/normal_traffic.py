@@ -31,10 +31,6 @@ class Controller_drop_h2(app_manager.RyuApp):
                                         bands=[parser.OFPMeterBandDrop(rate=100_000,
                                                                         burst_size=0)])
         datapath.send_msg(meter_mod)
-        match = parser.OFPMatch()
-        actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
-                                          ofproto.OFPCML_NO_BUFFER)]
-        self.add_flow(datapath, 0, match, actions)
         # allow all communication from port 1
         match = parser.OFPMatch(in_port=1)
         actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT), parser.OFPActionOutput(ofproto.OFPP_CONTROLLER)]
