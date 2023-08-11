@@ -34,7 +34,7 @@ class Controller_drop_h2(app_manager.RyuApp):
         # allow all communication from port 1
         match = parser.OFPMatch(in_port=1)
         actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT), parser.OFPActionOutput(ofproto.OFPP_CONTROLLER)]
-        self.add_flow(datapath, 1, match, actions)
+        self.add_flow(datapath, 1, match, actions, meter_id=1)
         # # allow all communication from port 1
         # match = parser.OFPMatch(eth_dst='00:00:00:00:00:01', eth_src='00:00:00:00:00:02')
         # actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT)]
