@@ -37,11 +37,11 @@ class Controller_drop_h2(app_manager.RyuApp):
         self.add_flow(datapath, 1, match, actions, meter_id=1)
         # allow all communication from port 1
         match = parser.OFPMatch(ipv4_dst='10.0.0.2')
-        actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT)]
+        actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT), parser.OFPActionOutput(ofproto.OFPP_CONTROLLER)]
         self.add_flow(datapath, 2, match, actions, meter_id=1)
         # disiable all communication of mac address 00:00:00:00:00:02
         match = parser.OFPMatch(ipv4_dst='10.0.0.4')
-        actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT)]
+        actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT), parser.OFPActionOutput(ofproto.OFPP_CONTROLLER)]
         self.add_flow(datapath, 2, match, actions, meter_id=1)
 
     def add_flow(self, datapath, priority, match, actions, buffer_id=None, meter_id=None, command=None, idle_timeout=0):
