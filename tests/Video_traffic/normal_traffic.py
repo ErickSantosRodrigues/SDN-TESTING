@@ -21,14 +21,14 @@ class Controller_drop_h2(app_manager.RyuApp):
         meter_mod = parser.OFPMeterMod(datapath=datapath,
                                         command=ofproto.OFPMC_ADD,
                                         flags=ofproto.OFPMF_KBPS, meter_id=1,
-                                        bands=[parser.OFPMeterBandDrop(rate=100_000,
+                                        bands=[parser.OFPMeterBandDrop(rate=10_000,
                                                                         burst_size=0)])
         datapath.send_msg(meter_mod)
         # add a second meter entry with a rate limit of 100 Mbs
         meter_mod = parser.OFPMeterMod(datapath=datapath,
                                         command=ofproto.OFPMC_ADD,
                                         flags=ofproto.OFPMF_KBPS, meter_id=2,
-                                        bands=[parser.OFPMeterBandDrop(rate=100_000,
+                                        bands=[parser.OFPMeterBandDrop(rate=10_000,
                                                                         burst_size=0)])
         datapath.send_msg(meter_mod)
         # allow all communication from port 1
