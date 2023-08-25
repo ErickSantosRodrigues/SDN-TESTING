@@ -41,6 +41,30 @@ class DNSApp(app_manager.RyuApp):
         actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT), parser.OFPActionOutput(ofproto.OFPP_CONTROLLER)]
         self.add_flow(datapath, 1, match, actions)
 
+    def add_flow(self, datapath, priority, match, actions, buffer_id=None, meter_id=None, command=None, idle_timeout=0):
+        ofproto = datapath.ofproto
+        parser = datapath.ofproto_parser
+        
+        if actions == []:
+            inst = [parser.OFPInstructionActions(ofproto.OFPIT_CLEAR_ACTIONS, [])]
+        else:
+            inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS,
+                                                 actions)]
+        if meter_id is not None:
+            inst.append(parser.OFPInstructionMeter(meter_id=meter_id))
+
+        if command is None:
+            command = ofproto.OFPFC_ADD
+        if buffer_id:
+            mod = parser.OFPFlowMod(datapath=datapath, buffer_id=buffer_id,
+                                    priority=priority, match=match,
+                                    instructions=inst, command=command, idle_timeout=idle_timeout)
+        else:
+            mod = parser.OFPFlowMod(datapath=datapath, priority=priority,
+                                    match=match, instructions=inst, command=command, idle_timeout=idle_timeout)
+        datapath.send_msg(mod)
+        self.logger.info(f"Flow added: {match} -> {actions}")
+
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def _packet_in_handler(self, ev):
         msg = ev.msg
