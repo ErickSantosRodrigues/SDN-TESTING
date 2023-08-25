@@ -29,12 +29,12 @@ def run():
     net.start()
     sta1, sta2, sta3 = net.stations[0], net.stations[1], net.stations[2]
     net.pingAll()
-    sta1.cmd('''xterm -geometry 80x24+0+0 -hold -T "sta1_5002" -e "iperf3 -s --port 5002 > server1.txt" &''')
-    sta1.cmd('''xterm -geometry 80x24+625+0 -hold -T "sta1_5003" -e "iperf3 -s --port 5003 > server2.txt" &''')
+    sta1.cmd('''xterm -geometry 80x24+0+0 -hold -T "sta1_5002" -e " " &''')
+    sta1.cmd('''xterm -geometry 80x24+625+0 -hold -T "sta1_5003" -e " " &''')
     sleep(20)
-    sta2.cmd('''xterm -geometry 80x24+0+380 -hold -T "sta2" -e "iperf3 -c 10.0.0.1 --port 5002 -t 60 -i 60"&''')
+    sta2.cmd('''xterm -geometry 80x24+0+380 -hold -T "sta2" -e " " &''')
     sleep(10)
-    sta3.cmd('''xterm -geometry 80x24+625+380 -hold -T "sta3" -e "iperf3 -c 10.0.0.1 --port 5003 -t 20 -i 20" &''')
+    sta3.cmd('''xterm -geometry 80x24+625+380 -hold -T "sta3" -e " " &''')
     CLI(net)
     net.stop()
 
