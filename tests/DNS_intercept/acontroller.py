@@ -12,7 +12,6 @@ class DNSApp(app_manager.RyuApp):
     def __init__(self, *args, **kwargs):
         super(DNSApp, self).__init__(*args, **kwargs)
     
-
     @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
     def switch_features_handler(self, ev):
         datapath = ev.msg.datapath
