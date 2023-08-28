@@ -37,7 +37,7 @@ class SimpleSwitch13(app_manager.RyuApp):
         # truncated packet data. In that case, we cannot output packets
         # correctly.  The bug has been fixed in OVS v2.1.0.
         match = parser.OFPMatch()
-        actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
+        actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT, ofproto.OFPCML_NO_BUFFER),parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
                                           ofproto.OFPCML_NO_BUFFER)]
         self.add_flow(datapath, 0, match, actions)
 

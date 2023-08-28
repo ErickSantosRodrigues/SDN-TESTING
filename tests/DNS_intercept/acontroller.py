@@ -78,26 +78,4 @@ class DNSApp(app_manager.RyuApp):
                     self.logger.info(f"DNS Packet: {dns_data}")
                     if dns_data.qr == dpkt.dns.DNS_Q:   # Check if it is a DNS query 
                         self.logger.info(f"DNS Query: {dns_data}")
-        pkt = packet.Packet(msg.data)
-        ip_pkt = pkt.get_protocol(ipv4.ipv4)
-        if ip_pkt:
-            ip_datagram = ip_pkt.proto
-            if ip_datagram == inet.IPPROTO_UDP:
-                udp_pkt = pkt.get_protocol(udp.udp)
-                if udp_pkt:
-                    try:
-                        dns_data = dpkt.dns.DNS(udp_pkt)
-                        if dns_data.qr != dpkt.dns.DNS_Q:
-                            return
-                        if dns_data.opcode != dpkt.dns.DNS_QUERY:
-                            return
-                        if len(dns_data.qd) != 1:
-                            return
-                        query = dns_data.qd[0]
-                        if query.type != 1 or query.cls != 1:
-                            return
-                        domain_name = query.name
-                        print("Domain: ", domain_name)
-                    except:
-                        pass
 
