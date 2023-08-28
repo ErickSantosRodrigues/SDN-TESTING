@@ -17,28 +17,22 @@ class DNSApp(app_manager.RyuApp):
         datapath = ev.msg.datapath
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
-        # add a meter entry with a rate limit of 100 Mbs
-        meter_mod = parser.OFPMeterMod(datapath=datapath,
-                                        command=ofproto.OFPMC_ADD,
-                                        flags=ofproto.OFPMF_KBPS, meter_id=1,
-                                        bands=[parser.OFPMeterBandDrop(rate=100_000,
-                                                                        burst_size=0)])
-        datapath.send_msg(meter_mod)
-        # add a second meter entry with a rate limit of 100 Mbs
-        meter_mod = parser.OFPMeterMod(datapath=datapath,
-                                        command=ofproto.OFPMC_ADD,
-                                        flags=ofproto.OFPMF_KBPS, meter_id=2,
-                                        bands=[parser.OFPMeterBandDrop(rate=100_000,
-                                                                        burst_size=0)])
-        datapath.send_msg(meter_mod)
         match = parser.OFPMatch()
         actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
                                           ofproto.OFPCML_NO_BUFFER)]
         self.add_flow(datapath, 0, match, actions)
         # allow all communication from port 1
         match = parser.OFPMatch(in_port=1)
-        actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT), parser.OFPActionOutput(ofproto.OFPP_CONTROLLER)]
+        actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT)]
         self.add_flow(datapath, 1, match, actions)
+        match = parser.OFPMatch(
+            eth_type=0x0800,  # IP
+            ip_proto=17,  # UDP
+            udp_dst=53  # DNS
+        )
+        actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
+                                            ofproto.OFPCML_NO_BUFFER)]
+        self.add_flow(datapath, 2, match, actions)
 
     def add_flow(self, datapath, priority, match, actions, buffer_id=None, meter_id=None, command=None, idle_timeout=0):
         ofproto = datapath.ofproto
@@ -72,16 +66,16 @@ class DNSApp(app_manager.RyuApp):
         ofp_parser = dp.ofproto_parser
         pkt = packet.Packet(msg.data)
         eth = pkt.get_protocol(ethernet.ethernet)
-
+        self.logger.info(f"Packet: {pkt}")
         if eth.ethertype == ether_types.ETH_TYPE_IP:
             ipv4_pkt = pkt.get_protocol(ipv4.ipv4)
-            self.logger.info("IP Packet: %s", ipv4_pkt)
+            self.logger.info(f"IP Packet: {ipv4_pkt}")
             if ipv4_pkt.proto == 17:  # Check if the protocol is UDP 
                 udp_pkt = pkt.get_protocol(udp.udp)
-                self.logger.info("UDP Packet: %s", udp_pkt)
+                self.logger.info(f"UDP Packet: {udp_pkt}")
                 if udp_pkt.dst_port == 53:  # Check if the destination port is 53 (DNS)
                     dns_data = dpkt.dns.DNS(udp_pkt.data)
-                    self.logger.info("DNS Packet: %s", dns_data)
+                    self.logger.info(f"DNS Packet: {dns_data}")
                     if dns_data.qr == dpkt.dns.DNS_Q:   # Check if it is a DNS query 
-                        self.logger.info("DNS Query: %s", dns_data)
+                        self.logger.info(f"DNS Query: {dns_data}")
 
