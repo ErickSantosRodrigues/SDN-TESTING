@@ -29,9 +29,9 @@ def run():
     net.start()
     sta1, sta2, sta3 = net.stations[0], net.stations[1], net.stations[2]
     net.pingAll()
-    sta1.cmd('''xterm -geometry 80x24+0+0 -hold -T "DNS_Solicitation_1" -e "dig www.example.com " &''')
+    sta1.cmd('''xterm -geometry 80x24+0+0 -hold -T "DNS_Solicitation_1" -e "dig +notcp www.example.com " &''')
     sleep(20)
-    sta2.cmd('''xterm -geometry 80x24+625+0 -hold -T "DNS_Solicitation_2" -e "dig www.example.com " &''')
+    sta2.cmd('''xterm -geometry 80x24+625+0 -hold -T "DNS_Solicitation_2" -e "dig +notcp www.example.com " &''')
     # sleep(10)
     # sta3.cmd('''xterm -geometry 80x24+625+380 -hold -T "sta3" -e " " &''')
     CLI(net)
