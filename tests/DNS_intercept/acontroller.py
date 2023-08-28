@@ -23,7 +23,7 @@ class DNSApp(app_manager.RyuApp):
         self.add_flow(datapath, 0, match, actions)
         # allow all communication from port 1
         match = parser.OFPMatch(in_port=1)
-        actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT)]
+        actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT, ofproto.OFPP_CONTROLLER)]
         self.add_flow(datapath, 1, match, actions)
         match = parser.OFPMatch(
             eth_type=0x0800,  # IP
@@ -66,7 +66,7 @@ class DNSApp(app_manager.RyuApp):
         ofp_parser = dp.ofproto_parser
         pkt = packet.Packet(msg.data)
         eth = pkt.get_protocol(ethernet.ethernet)
-        self.logger.info(f"Packet: {pkt}")
+        self.logger.info(f"Packet: pkt {pkt.get_protocol(ethernet.ethernet)}, IP {pkt.get_protocol(ipv4.ipv4)}, UDP {pkt.get_protocol(udp.udp)}")
         if eth.ethertype == ether_types.ETH_TYPE_IP:
             ipv4_pkt = pkt.get_protocol(ipv4.ipv4)
             self.logger.info(f"IP Packet: {ipv4_pkt}")
