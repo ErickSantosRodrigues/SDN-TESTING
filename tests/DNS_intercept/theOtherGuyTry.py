@@ -100,13 +100,13 @@ class SimpleSwitch13(app_manager.RyuApp):
                         try:
                             
                             dns=dpkt.dns.DNS(udp.data)
-                           # self.logger.info("************************************ dns packet %s",dns)
+                            self.logger.info("************************************ dns packet %s",dns)
                         except:
                             continue
                         if dns.qr!=dpkt.dns.DNS_R:
                             continue
                         if dns.opcode!=dpkt.dns.DNS_QUERY:
-                            #self.logger.info("#################################### The qr %s",dns.qr)
+                            self.logger.info("#################################### The qr %s",dns.qr)
                             continue
                         if dns.rcode!=dpkt.dns.DNS_RCODE_NOERR:
                             continue

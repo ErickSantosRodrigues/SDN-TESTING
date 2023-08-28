@@ -3,6 +3,7 @@ from ryu.controller import ofp_event
 from ryu.controller.handler import MAIN_DISPATCHER, CONFIG_DISPATCHER, set_ev_cls
 from ryu.ofproto import ofproto_v1_3
 from ryu.lib.packet import packet, ethernet, ether_types, ipv4, udp
+import array
 import dpkt
 
 
@@ -66,16 +67,27 @@ class DNSApp(app_manager.RyuApp):
         ofp_parser = dp.ofproto_parser
         pkt = packet.Packet(msg.data)
         eth = pkt.get_protocol(ethernet.ethernet)
-        self.logger.info(f"Packet: pkt {pkt.get_protocol(ethernet.ethernet)}, IP {pkt.get_protocol(ipv4.ipv4)}, UDP {pkt.get_protocol(udp.udp)}")
-        if eth.ethertype == ether_types.ETH_TYPE_IP:
-            ipv4_pkt = pkt.get_protocol(ipv4.ipv4)
-            self.logger.info(f"IP Packet: {ipv4_pkt}")
-            if ipv4_pkt.proto == 17:  # Check if the protocol is UDP 
-                udp_pkt = pkt.get_protocol(udp.udp)
-                self.logger.info(f"UDP Packet: {udp_pkt}")
-                if udp_pkt.dst_port == 53:  # Check if the destination port is 53 (DNS)
-                    dns_data = dpkt.dns.DNS(udp_pkt.data)
-                    self.logger.info(f"DNS Packet: {dns_data}")
-                    if dns_data.qr == dpkt.dns.DNS_Q:   # Check if it is a DNS query 
-                        self.logger.info(f"DNS Query: {dns_data}")
+        self.logger.info(f"Packet in: {eth.src} -> {eth.dst}")
+        pkt = packet.Packet(array.array('B', ev.msg.data))
+        raw_pkt = bytes(pkt.data)
+
+        eth_pkt = dpkt.ethernet.Ethernet(raw_pkt)
+        ip_pkt = eth_pkt.data
+    
+        src_ip = ip_pkt.src
+        dst_ip = ip_pkt.dst
+        self.logger.info(f"2 Packet in: {src_ip} -> {dst_ip}")
+
+        # self.logger.info(f"Packet: pkt {pkt.get_protocol(ethernet.ethernet)}, IP {pkt.get_protocol(ipv4.ipv4)}, UDP {pkt.get_protocol(udp.udp)}")
+        # if eth.ethertype == ether_types.ETH_TYPE_IP:
+        #     ipv4_pkt = pkt.get_protocol(ipv4.ipv4)
+        #     self.logger.info(f"IP Packet: {ipv4_pkt}")
+        #     if ipv4_pkt.proto == 17:  # Check if the protocol is UDP 
+        #         udp_pkt = pkt.get_protocol(udp.udp)
+        #         self.logger.info(f"UDP Packet: {udp_pkt}")
+        #         if udp_pkt.dst_port == 53:  # Check if the destination port is 53 (DNS)
+        #             dns_data = dpkt.dns.DNS(udp_pkt.data)
+        #             self.logger.info(f"DNS Packet: {dns_data}")
+        #             if dns_data.qr == dpkt.dns.DNS_Q:   # Check if it is a DNS query 
+        #                 self.logger.info(f"DNS Query: {dns_data}")
 
