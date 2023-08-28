@@ -75,10 +75,13 @@ class DNSApp(app_manager.RyuApp):
 
         if eth.ethertype == ether_types.ETH_TYPE_IP:
             ipv4_pkt = pkt.get_protocol(ipv4.ipv4)
+            self.logger.info("IP Packet: %s", ipv4_pkt)
             if ipv4_pkt.proto == 17:  # Check if the protocol is UDP 
                 udp_pkt = pkt.get_protocol(udp.udp)
+                self.logger.info("UDP Packet: %s", udp_pkt)
                 if udp_pkt.dst_port == 53:  # Check if the destination port is 53 (DNS)
                     dns_data = dpkt.dns.DNS(udp_pkt.data)
+                    self.logger.info("DNS Packet: %s", dns_data)
                     if dns_data.qr == dpkt.dns.DNS_Q:   # Check if it is a DNS query 
                         self.logger.info("DNS Query: %s", dns_data)
 
