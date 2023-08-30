@@ -2,7 +2,7 @@ from ryu.base import app_manager
 from ryu.controller import ofp_event
 from ryu.controller.handler import MAIN_DISPATCHER, CONFIG_DISPATCHER, set_ev_cls
 from ryu.ofproto import ofproto_v1_3
-from ryu.lib.packet import packet, ethernet, ether_types, ipv4, udp
+from ryu.lib.packet import packet, ethernet, ether_types, ipv4, udp, dns
 import array
 import dpkt
 
@@ -27,8 +27,8 @@ class DNSApp(app_manager.RyuApp):
         actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT), parser.OFPActionOutput(ofproto.OFPP_CONTROLLER, ofproto.OFPCML_NO_BUFFER)]
         self.add_flow(datapath, 1, match, actions)                                        
         match = parser.OFPMatch(
-            # eth_type=0x0800,  # IP
-            # ip_proto=17,  # UDP
+            eth_type=0x0800,  # IP
+            ip_proto=17,  # UDP
             udp_dst=53  # DNS
         )
         actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT), parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
@@ -77,6 +77,17 @@ class DNSApp(app_manager.RyuApp):
         src_ip = ip_pkt.src
         dst_ip = ip_pkt.dst
         self.logger.info(f"2 Packet in: {src_ip} -> {dst_ip}")
+
+        udp_pkt = pkt.get_protocol(udp.udp)
+        if udp_pkt is not None:
+            # Check if the UDP packet is a DNS packet
+            if udp_pkt.src_port == 53 or udp_pkt.dst_port == 53:
+                # Parse the DNS packet
+                dns_pkt = dpkt.dns.DNS(udp_pkt.data)
+                if dns_pkt.qr == dpkt.dns.DNS_R and dns_pkt.opcode == dpkt.dns.DNS_QUERY and dns_pkt.rcode == dpkt.dns.DNS_RCODE_NOERR:
+                    # Print information about the DNS queries
+                    for qname in dns_pkt.qd:
+                        self.logger.info("The domain name ************** %s ", qname.name)
 
         # self.logger.info(f"Packet: pkt {pkt.get_protocol(ethernet.ethernet)}, IP {pkt.get_protocol(ipv4.ipv4)}, UDP {pkt.get_protocol(udp.udp)}")
         # if eth.ethertype == ether_types.ETH_TYPE_IP:
