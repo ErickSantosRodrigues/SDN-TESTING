@@ -77,7 +77,7 @@ class Controller_drop_h2(app_manager.RyuApp):
         self.logger.info(f"Packet in: {eth.src} -> {eth.dst}")
         if eth.dst == '00:00:00:00:00:03':
             parser = datapath.ofproto_parser
-            match = parser.OFPMatch(eth_dst='00:00:00:00:00:02')
+            match = parser.OFPMatch(eth_dst='00:00:00:00:00:04')
             # Drop the packets from h2
             actions = []
             self.add_flow(datapath, 2, match, actions, idle_timeout=1)
