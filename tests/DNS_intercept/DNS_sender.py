@@ -22,5 +22,5 @@ def send_dns_query(server, name):
     
     sock.sendto(query, server)
     
-send_dns_query(('10.0.0.1', 53), 'google.com')
+send_dns_query(('127.0.0.1', 53), 'google.com')
 
