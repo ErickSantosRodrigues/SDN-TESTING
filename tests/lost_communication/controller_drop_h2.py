@@ -73,12 +73,12 @@ class Controller_drop_h2(app_manager.RyuApp):
         eth = pkt.get_protocol(ethernet.ethernet)
         in_port = msg.match['in_port']
         self.logger.info(f"Packet in {eth.src} {eth.dst} {in_port}")
-        # if eth.src == '00:00:00:00:00:01' and eth.dst == '00:00:00:00:00:03':
-        #     parser = datapath.ofproto_parser
-        #     match = parser.OFPMatch(eth_dst='00:00:00:00:00:01', eth_src='00:00:00:00:00:02')
-        #     # Drop the packets from h2
-        #     actions = []
-        #     self.add_flow(datapath, 3, match, actions, idle_timeout=3)
+        if eth.src == '00:00:00:00:00:01' and eth.dst == '00:00:00:00:00:03':
+            parser = datapath.ofproto_parser
+            match = parser.OFPMatch(eth_dst='00:00:00:00:00:01', eth_src='00:00:00:00:00:02')
+            # Drop the packets from h2
+            actions = []
+            self.add_flow(datapath, 3, match, actions, idle_timeout=1)
 
     @handler.set_ev_cls(ofp_event.EventOFPFlowRemoved, MAIN_DISPATCHER)
     def flow_removed_handler(self, ev):
