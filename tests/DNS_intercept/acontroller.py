@@ -76,18 +76,25 @@ class DNSApp(app_manager.RyuApp):
     
         src_ip = ip_pkt.src
         dst_ip = ip_pkt.dst
-        self.logger.info(f"2 Packet in: {src_ip} -> {dst_ip}")
-
-        udp_pkt = pkt.get_protocol(udp.udp)
-        if udp_pkt is not None:
-            # Check if the UDP packet is a DNS packet
-            if udp_pkt.src_port == 53 or udp_pkt.dst_port == 53:
-                # Parse the DNS packet
-                dns_pkt = dpkt.dns.DNS(udp_pkt.data)
-                if dns_pkt.qr == dpkt.dns.DNS_R and dns_pkt.opcode == dpkt.dns.DNS_QUERY and dns_pkt.rcode == dpkt.dns.DNS_RCODE_NOERR:
-                    # Print information about the DNS queries
-                    for qname in dns_pkt.qd:
-                        self.logger.info("The domain name ************** %s ", qname.name)
+        pkt = packet.Packet(array.array('B', ev.msg.data))
+        eth = pkt.get_protocol(ethernet.ethernet)
+        
+        if not eth:
+            return
+        
+        if eth.ethertype == ether.ETH_TYPE_IP:
+            ip = pkt.get_protocol(ipv4.ipv4)
+            
+            if ip.proto == inet.IPPROTO_UDP:
+                udp_packet = pkt.get_protocol(udp.udp)
+                
+                if udp_packet.dport == 53:
+                    self.parse_dns_data(udp_packet.data)
+    
+    def parse_dns_data(self, data):
+        dns = dpkt.dns.DNS(data)
+        for question in dns.qd:
+            print(question.name)
 
         # self.logger.info(f"Packet: pkt {pkt.get_protocol(ethernet.ethernet)}, IP {pkt.get_protocol(ipv4.ipv4)}, UDP {pkt.get_protocol(udp.udp)}")
         # if eth.ethertype == ether_types.ETH_TYPE_IP:
