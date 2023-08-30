@@ -63,6 +63,7 @@ class DNSApp(app_manager.RyuApp):
     def _packet_in_handler(self, ev):
         pkt = packet.Packet(array.array('B', ev.msg.data))
         eth = pkt.get_protocol(ethernet.ethernet)
+        self.logger.info(f"Packet: {pkt}")
         
         if not eth:
             return

@@ -21,6 +21,7 @@ def send_dns_query(server, name):
     query += b'\x00\x01'  # Class: IN
     
     sock.sendto(query, server)
-    
+
+
 send_dns_query(('127.0.0.1', 53), 'google.com')
 
