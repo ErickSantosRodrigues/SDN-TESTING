@@ -30,7 +30,7 @@ def run():
     net = Mininet_wifi(topo=Wifi_video_traffic(), host=CPULimitedHost, controller=RemoteController('c', '127.0.0.1', 6653, protocols="OpenFlow13"), accessPoint=OVSKernelAP)
     net.start()
     sta1, sta2, sta3, sta4 = net.stations
-
+    net.waitConnected()
     sta1.cmd("chmod 777 d*")
     net.pingAll()
     sta1.cmd('''xterm -geometry 80x24+0+0 -hold -T "sta1_stream_A" -e "cvlc -vvv ../videos/test.mp4 --sout '#standard{access=http, mux=ts,dst=:8080}' --no-sout-rtp-sap --no-sout-standard-sap --ttl=1 --sout-keep --loop" &''')
@@ -39,7 +39,7 @@ def run():
     sleep(6)
     sta2.cmd("xterm -geometry 80x24+0+380 -hold -T 'sta2' -e 'vlc http://10.0.0.1:8080' &")
 
-    sleep(6)
+    sleep(10)
     sta3.cmd("xterm -geometry 80x24+650+380 -hold -T 'sta3' -e 'vlc http://10.0.0.4:8081' &")
     CLI(net)
     net.stop()
