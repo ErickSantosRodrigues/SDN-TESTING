@@ -61,21 +61,6 @@ class DNSApp(app_manager.RyuApp):
 
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def _packet_in_handler(self, ev):
-        msg = ev.msg
-        dp = msg.datapath
-        ofp = dp.ofproto
-        ofp_parser = dp.ofproto_parser
-        pkt = packet.Packet(msg.data)
-        eth = pkt.get_protocol(ethernet.ethernet)
-        self.logger.info(f"Packet in: {eth.src} -> {eth.dst}")
-        pkt = packet.Packet(array.array('B', ev.msg.data))
-        raw_pkt = bytes(pkt.data)
-
-        eth_pkt = dpkt.ethernet.Ethernet(raw_pkt)
-        ip_pkt = eth_pkt.data
-    
-        src_ip = ip_pkt.src
-        dst_ip = ip_pkt.dst
         pkt = packet.Packet(array.array('B', ev.msg.data))
         eth = pkt.get_protocol(ethernet.ethernet)
         
