@@ -98,7 +98,7 @@ class SimpleSwitch13(app_manager.RyuApp):
         self.logger.info("packet in %s %s %s %s", dpid, src, dst, in_port)
         if src not in self.net:
             self.net.add_node(src)
-            self.net.add_edge(dpid, src, {'port': in_port})
+            self.net.add_edge(dpid, src, dst)
             self.net.add_edge(src, dpid)
         if dst in self.net:
             # print (src in self.net)
