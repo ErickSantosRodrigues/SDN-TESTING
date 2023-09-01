@@ -89,10 +89,10 @@ class DNSApp(app_manager.RyuApp):
             for qname in dns.qd:
                 print(qname.name)
                 src_mac = eth.src 
-                timestamp = time.strftime('%d-%m-%Y %H-%M-%S ') 
+                timestamp = time.strftime('%d/%m/%Y %H:%M:%S ') 
                 fileStr = timestamp + src_mac + ' ' + qname.name + '\n' 
                 fw.write(fileStr)
                 fw.close()
                 # return
-                self.logger.info(eth.src + " " + dns.qd)
+                self.logger.info(f"{eth.src} {dns.qd}")
 
