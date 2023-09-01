@@ -78,6 +78,9 @@ class NetworkGraph(app_manager.RyuApp):
         self.print_network_graph()
 
     def print_network_graph(self):
-        for edge in self.network_graph.edges():
-            self.logger.info("Edge: %s %s", edge[0], edge[1])
+        import matplotlib.pyplot as plt
+        # for edge in self.network_graph.edges():
+        #     self.logger.info("Edge: %s %s", edge[0], edge[1])
+        nx.draw(self.network_graph, labels=True)
+        plt.show()
 
