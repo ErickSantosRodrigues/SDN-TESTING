@@ -25,15 +25,14 @@ class DNSApp(app_manager.RyuApp):
         self.add_flow(datapath, 0, match, actions)
         # allow all communication from port 1
         match = parser.OFPMatch(in_port=1)
-        actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT), parser.OFPActionOutput(ofproto.OFPP_CONTROLLER, ofproto.OFPCML_NO_BUFFER)]
+        actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT)]
         self.add_flow(datapath, 1, match, actions)                                        
         match = parser.OFPMatch(
             eth_type=0x0800,  # IP
             ip_proto=17,  # UDP
             udp_dst=53  # DNS
         )
-        actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT), parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
-                                                                    ofproto.OFPCML_NO_BUFFER)]
+        actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER, ofproto.OFPCML_NO_BUFFER)]
         self.add_flow(datapath, 2, match, actions)
 
     def add_flow(self, datapath, priority, match, actions, buffer_id=None, meter_id=None, command=None, idle_timeout=0):
