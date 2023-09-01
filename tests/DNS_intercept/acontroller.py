@@ -86,13 +86,12 @@ class DNSApp(app_manager.RyuApp):
                                       exc_type, exc_value, exc_traceback)
         if dns:
             for qname in dns.qd:
-                print(qname.name)
                 src_mac = eth.src 
                 timestamp = time.strftime('%d/%m/%Y %H:%M:%S ') 
                 fileStr = timestamp + src_mac + ' ' + qname.name + '\n' 
                 fw.write(fileStr)
                 fw.close()
                 # return
-                self.logger.info(f"{eth.src} {dns.qd}")
-                self.logger.info(f"{dns}")
+                self.logger.info(f"{eth.src} {qname.name}}")
+                self.logger.info(f"{dns.an}")
 
