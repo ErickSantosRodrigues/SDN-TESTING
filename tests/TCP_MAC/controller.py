@@ -4,6 +4,7 @@ from ryu.controller.handler import set_ev_cls, CONFIG_DISPATCHER, MAIN_DISPATCHE
 from ryu.ofproto import ofproto_v1_3
 from ryu.lib.packet import packet, ethernet, ether_types
 from ryu.lib import dpid as dpid_lib
+from ryu.lib.packet import ipv4, udp, tcp
 
 
 class NS_controller_100mbs(app_manager.RyuApp):
@@ -29,6 +30,9 @@ class NS_controller_100mbs(app_manager.RyuApp):
                                           ofproto.OFPCML_NO_BUFFER)]
         self.add_flow(datapath, 0, match, actions)
         # allow all communication from port 1
+        match = parser.OFPMatch(in_port=1)
+        actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT)]
+        self.add_flow(datapath, 1, match, actions, meter_id=1)
         match = parser.OFPMatch(eth_dst='00:00:00:00:00:03')
         actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT)]
         self.add_flow(datapath, 2, match, actions, meter_id=1)
@@ -65,5 +69,6 @@ class NS_controller_100mbs(app_manager.RyuApp):
         pkt = packet.Packet(msg.data)
         eth = pkt.get_protocol(ethernet.ethernet)
         in_port = msg.match['in_port']
-        self.logger.info(f"Packet in {eth.src} {eth.dst} {in_port}")
+        ip = pkt.get_protocol(ipv4.ipv4)
+        self.logger.info(f"Packet in {ip} {pkt} {in_port}")
 
