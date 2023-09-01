@@ -43,6 +43,9 @@ class NS_controller_100mbs(app_manager.RyuApp):
         match = parser.OFPMatch(ipv4_dst='10.0.0.1')
         actions = []
         self.add_flow(datapath, 2, match, actions, meter_id=1)
+        match = parser.OFPMatch(ipv4_src='10.0.0.1')
+        actions = []
+        self.add_flow(datapath, 2, match, actions, meter_id=1)
 
     def add_flow(self, datapath, priority, match, actions, buffer_id=None, meter_id=None, command=None):
         ofproto = datapath.ofproto

@@ -22,6 +22,7 @@ class Wifi_band_limit_Topo(Topo):
         self.addLink(sta1, ap1, bw=150)
         self.addLink(sta2, ap1, bw=150)
         self.addLink(sta3, ap1, bw=150)
+        self.addLink(sta4, ap1, bw=150)
     
 
 def run():
