@@ -2,6 +2,7 @@ from ryu.base import app_manager
 from ryu.controller import ofp_event
 from ryu.controller.handler import MAIN_DISPATCHER, CONFIG_DISPATCHER
 from ryu.controller.handler import set_ev_cls
+from ryu.lib.packet import packet, ethernet, ether_types
 from ryu.ofproto import ofproto_v1_3
 import networkx as nx
 
@@ -64,8 +65,11 @@ class NetworkGraph(app_manager.RyuApp):
         dp = msg.datapath
         ofp = dp.ofproto
 
-        src = msg.match['eth_src']
-        dst = msg.match['eth_dst']
+        pkt = packet.Packet(msg.data)
+        eth = pkt.get_protocol(ethernet.ethernet)
+
+        src = eth.src
+        dst = eth.dst
 
         # Update the network graph
         self.network_graph.add_edge(src, dst)
