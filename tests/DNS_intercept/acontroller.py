@@ -94,4 +94,5 @@ class DNSApp(app_manager.RyuApp):
                 fw.close()
                 # return
                 self.logger.info(f"{eth.src} {dns.qd}")
+                self.logger.info(f"{dns}")
 
