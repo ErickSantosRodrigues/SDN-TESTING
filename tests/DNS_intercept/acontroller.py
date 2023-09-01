@@ -3,8 +3,9 @@ from ryu.controller import ofp_event
 from ryu.controller.handler import MAIN_DISPATCHER, CONFIG_DISPATCHER, set_ev_cls
 from ryu.ofproto import ofproto_v1_3, ether, inet
 from ryu.lib.packet import packet, ethernet, ether_types, ipv4, udp
-import array
 import dpkt
+import time
+import sys
 
 
 class DNSApp(app_manager.RyuApp):
@@ -93,5 +94,5 @@ class DNSApp(app_manager.RyuApp):
                 fw.write(fileStr)
                 fw.close()
                 # return
-                # print(eth.src + " " + dns.qd)
+                self.logger.info(eth.src + " " + dns.qd)
 
