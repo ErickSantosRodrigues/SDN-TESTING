@@ -61,37 +61,41 @@ class DNSApp(app_manager.RyuApp):
 
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def _packet_in_handler(self, ev):
-        pkt = packet.Packet(array.array('B', ev.msg.data))
         eth = pkt.get_protocol(ethernet.ethernet)
-        self.logger.info(f"Packet: {pkt}")
-        
-        if not eth:
-            return
-        
-        if eth.ethertype == ether.ETH_TYPE_IP:
-            ip = pkt.get_protocol(ipv4.ipv4)
-            
-            if ip.proto == inet.IPPROTO_UDP:
-                udp_packet = pkt.get_protocol(udp.udp)
-                
-                if udp_packet.dport == 53:
-                    self.parse_dns_data(udp_packet.data)
-    
-    def parse_dns_data(self, data):
-        dns = dpkt.dns.DNS(data)
-        for question in dns.qd:
-            print(question.name)
+        msg = ev.msg
+        datapath = msg.datapath
+        ofproto = datapath.ofproto
+        parser = datapath.ofproto_parser
+        in_port = msg.match['in_port']
 
-        # self.logger.info(f"Packet: pkt {pkt.get_protocol(ethernet.ethernet)}, IP {pkt.get_protocol(ipv4.ipv4)}, UDP {pkt.get_protocol(udp.udp)}")
-        # if eth.ethertype == ether_types.ETH_TYPE_IP:
-        #     ipv4_pkt = pkt.get_protocol(ipv4.ipv4)
-        #     self.logger.info(f"IP Packet: {ipv4_pkt}")
-        #     if ipv4_pkt.proto == 17:  # Check if the protocol is UDP 
-        #         udp_pkt = pkt.get_protocol(udp.udp)
-        #         self.logger.info(f"UDP Packet: {udp_pkt}")
-        #         if udp_pkt.dst_port == 53:  # Check if the destination port is 53 (DNS)
-        #             dns_data = dpkt.dns.DNS(udp_pkt.data)
-        #             self.logger.info(f"DNS Packet: {dns_data}")
-        #             if dns_data.qr == dpkt.dns.DNS_Q:   # Check if it is a DNS query 
-        #                 self.logger.info(f"DNS Query: {dns_data}")
+        pkt = packet.Packet(msg.data)
+        eth = pkt.get_protocols(ethernet.ethernet)[0]
+	    #OUR CODE	
+	    pkt_udp = pkt.get_protocol(udp.udp)
+        dns = 0
+	    #fr = open('blacklist.txt', 'r')
+	    fw = open('./monitor.txt', 'a')
+	    if pkt_udp:
+            if pkt_udp.src_port == 53 or pkt_udp.dst_port == 53:
+                #*** Use dpkt to parse UDP DNS data:
+                try:
+                    dns = dpkt.dns.DNS(pkt.protocols[-1])
+                except:
+                    exc_type, exc_value, exc_traceback = sys.exc_info()
+                    self.logger.error("DNS extraction failed "
+                        "Exception %s, %s, %s",
+                         exc_type, exc_value, exc_traceback)
+        if dns:
+		    for qname in dns.qd:
+		        print(qname.name)
+		        src_mac = eth.src
+		        timestamp = time.strftime('%d-%m-%Y %H-%M-%S ')
+		        fileStr = timestamp + src_mac + ' ' + qname.name + '\n'
+		        fw.write(fileStr)
+		    
+		#return
+                #print(eth.src + " " + dns.qd)
+     
+        #if pkt_udp.src_port == 53:
+	 #   return
 
