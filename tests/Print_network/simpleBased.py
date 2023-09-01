@@ -98,7 +98,7 @@ class SimpleSwitch13(app_manager.RyuApp):
         self.logger.info("packet in %s %s %s %s", dpid, src, dst, in_port)
         if src not in self.net:
             self.net.add_node(src)
-            self.net.add_edge(dpid, src, dst)
+            self.net.add_edge(dpid, src)
             self.net.add_edge(src, dpid)
         if dst in self.net:
             # print (src in self.net)
@@ -123,7 +123,6 @@ class SimpleSwitch13(app_manager.RyuApp):
         import matplotlib.pyplot as plt
         fig = plt.figure()
         nx.draw(self.net, ax=fig.add_subplot())
-        plt.show()    
         fig.savefig("graph.png")
         actions = [parser.OFPActionOutput(out_port)]
 
@@ -144,4 +143,5 @@ class SimpleSwitch13(app_manager.RyuApp):
         out = parser.OFPPacketOut(datapath=datapath, buffer_id=msg.buffer_id,
                                   in_port=in_port, actions=actions, data=data)
         datapath.send_msg(out)
+
 
