@@ -70,32 +70,29 @@ class DNSApp(app_manager.RyuApp):
 
         pkt = packet.Packet(msg.data)
         eth = pkt.get_protocols(ethernet.ethernet)[0]
-	    #OUR CODE	
-	    pkt_udp = pkt.get_protocol(udp.udp)
-        dns = 0
-	    #fr = open('blacklist.txt', 'r')
-	    fw = open('./monitor.txt', 'a')
-	    if pkt_udp:
+        # OUR CODE	
+        pkt_udp = pkt.get_protocol(udp.udp)
+        dns = 0 
+        # fr = open('blacklist.txt', 'r') 
+        fw = open('./monitor.txt', 'a')
+        if pkt_udp:
             if pkt_udp.src_port == 53 or pkt_udp.dst_port == 53:
-                #*** Use dpkt to parse UDP DNS data:
+                # *** Use dpkt to parse UDP DNS data:
                 try:
                     dns = dpkt.dns.DNS(pkt.protocols[-1])
                 except:
                     exc_type, exc_value, exc_traceback = sys.exc_info()
                     self.logger.error("DNS extraction failed "
-                        "Exception %s, %s, %s",
-                         exc_type, exc_value, exc_traceback)
+                                      "Exception %s, %s, %s",
+                                      exc_type, exc_value, exc_traceback)
         if dns:
-		    for qname in dns.qd:
-		        print(qname.name)
-		        src_mac = eth.src
-		        timestamp = time.strftime('%d-%m-%Y %H-%M-%S ')
-		        fileStr = timestamp + src_mac + ' ' + qname.name + '\n'
-		        fw.write(fileStr)
-		    
-		#return
-                #print(eth.src + " " + dns.qd)
-     
-        #if pkt_udp.src_port == 53:
-	 #   return
+            for qname in dns.qd:
+                print(qname.name)
+                src_mac = eth.src 
+                timestamp = time.strftime('%d-%m-%Y %H-%M-%S ') 
+                fileStr = timestamp + src_mac + ' ' + qname.name + '\n' 
+                fw.write(fileStr)
+                fw.close()
+                # return
+                # print(eth.src + " " + dns.qd)
 
