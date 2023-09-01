@@ -37,7 +37,7 @@ class NS_controller_100mbs(app_manager.RyuApp):
         actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT)]
         self.add_flow(datapath, 2, match, actions, meter_id=1)
         # disiable all communication of mac address 00:00:00:00:00:02
-        match = parser.OFPMatch(dst_ip='10.0.0.2')
+        match = parser.OFPMatch(ipv4_dst='10.0.0.2')
         actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT)]
         self.add_flow(datapath, 2, match, actions, meter_id=1)
         match = parser.OFPMatch(eth_dst='00:00:00:00:00:01')
