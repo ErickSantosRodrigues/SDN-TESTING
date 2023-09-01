@@ -122,7 +122,7 @@ class SimpleSwitch13(app_manager.RyuApp):
         
         import matplotlib.pyplot as plt
         fig = plt.figure()
-        nx.draw(self.net, ax=fig.add_subplot())
+        nx.draw(self.net, ax=fig.add_subplot(), with_labels=True, font_weight='bold')
         fig.savefig("graph.png")
         actions = [parser.OFPActionOutput(out_port)]
 
