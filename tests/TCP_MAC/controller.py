@@ -30,21 +30,12 @@ class NS_controller_100mbs(app_manager.RyuApp):
                                           ofproto.OFPCML_NO_BUFFER)]
         self.add_flow(datapath, 0, match, actions)
         # allow all communication from port 1
-        match = parser.OFPMatch(in_port=1)
-        actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT)]
-        self.add_flow(datapath, 1, match, actions, meter_id=1)
         match = parser.OFPMatch(eth_dst='00:00:00:00:00:03')
         actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT)]
         self.add_flow(datapath, 2, match, actions, meter_id=1)
         # disiable all communication of mac address 00:00:00:00:00:02
         match = parser.OFPMatch(ipv4_dst='10.0.0.2')
         actions = [parser.OFPActionOutput(ofproto.OFPP_IN_PORT)]
-        self.add_flow(datapath, 2, match, actions, meter_id=1)
-        match = parser.OFPMatch(ipv4_dst='10.0.0.1')
-        actions = []
-        self.add_flow(datapath, 2, match, actions, meter_id=1)
-        match = parser.OFPMatch(ipv4_src='10.0.0.1')
-        actions = []
         self.add_flow(datapath, 2, match, actions, meter_id=1)
 
     def add_flow(self, datapath, priority, match, actions, buffer_id=None, meter_id=None, command=None):

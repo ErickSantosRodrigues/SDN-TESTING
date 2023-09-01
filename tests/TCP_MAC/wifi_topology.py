@@ -31,11 +31,11 @@ def run():
     sta1, sta2, sta3, sta4 = net.stations
     net.pingAll()
     sta4.cmd('''xterm -geometry 80x24+0+0 -hold -T "sta4_5001" -e "iperf3 -s --port 5001 " &''')
-    sta4.cmd('''xterm -geometry 80x24+625+0 -hold -T "sta4_5002" -e "iperf3 -s --port 5002 " &''')
+    sta4.cmd('''xterm -geometry 80x24+525+0 -hold -T "sta4_5002" -e "iperf3 -s --port 5002 " &''')
     sta4.cmd('''xterm -geometry 80x24+1000+0 -hold -T "sta4_5003" -e "iperf3 -s --port 5003 " &''')
     sleep(5)
     sta1.cmd('''xterm -geometry 80x24+0+380 -hold -T "sta1" -e "iperf3 -c 10.0.0.4 --port 5001 -t 60 -i 60"&''')
-    sta2.cmd('''xterm -geometry 80x24+625+380 -hold -T "sta2" -e "iperf3 -c 10.0.0.4 --port 5002 -t 60 -i 60" &''')
+    sta2.cmd('''xterm -geometry 80x24+525+380 -hold -T "sta2" -e "iperf3 -c 10.0.0.4 --port 5002 -t 60 -i 60" &''')
     sta3.cmd('''xterm -geometry 80x24+1000+380 -hold -T "sta3" -e "iperf3 -c 10.0.0.4 --port 5003 -t 60 -i 60" &''')
     CLI(net)
     net.stop()
