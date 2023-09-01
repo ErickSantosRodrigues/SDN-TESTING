@@ -92,6 +92,6 @@ class DNSApp(app_manager.RyuApp):
                 fw.write(fileStr)
                 fw.close()
                 # return
-                self.logger.info(f"{eth.src} {qname.name}}")
+                self.logger.info(f"{eth.src} {qname.name}")
                 self.logger.info(f"{dns.an}")
 
