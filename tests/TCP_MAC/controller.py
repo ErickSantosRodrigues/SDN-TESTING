@@ -73,5 +73,5 @@ class NS_controller_100mbs(app_manager.RyuApp):
         eth = pkt.get_protocol(ethernet.ethernet)
         in_port = msg.match['in_port']
         ip = pkt.get_protocol(ipv4.ipv4)
-        self.logger.info(f"Packet in {ip} {eth} {in_port}")
+        self.logger.info(f"Packet in {ip} {eth.src} {in_port}")
 
