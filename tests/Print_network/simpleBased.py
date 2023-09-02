@@ -97,7 +97,7 @@ class SimpleSwitch13(app_manager.RyuApp):
 
         self.logger.info("packet in %s %s %s %s", dpid, src, dst, in_port)
         if src not in self.net:
-            self.net.add_node(src)
+            self.net.add_node(src, label=src)
             self.net.add_edge(dpid, src)
             self.net.add_edge(src, dpid)
         if dst in self.net:
@@ -124,7 +124,7 @@ class SimpleSwitch13(app_manager.RyuApp):
         fig, ax = plt.subplots()
         nx.draw_networkx_edges(self.net, layout, ax=ax)
         for node, (x, y) in layout.items():
-            label = self.net.nodes[node]
+            label = self.net.nodes[node]['label']
             label_width = len(label) * 0.06  
             ax.add_patch(plt.Rectangle((x - label_width / 2, y - 0.1), label_width, 0.2, fill=True, color='lightblue'))
             plt.text(x, y, label, ha='center', va='center', fontsize=12, color='black')
