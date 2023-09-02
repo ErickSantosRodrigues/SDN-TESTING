@@ -126,12 +126,13 @@ class SimpleSwitch13(app_manager.RyuApp):
         layout = nx.circular_layout(self.net)
         import matplotlib.pyplot as plt
         fig, ax = plt.subplots()
-        nx.draw_networkx_edges(self.net, layout, ax=ax)
         for node, (x, y) in layout.items():
             label = self.net.nodes[node]['label']
             label_width = len(label) * 0.06  
-            ax.add_patch(plt.Rectangle((x - label_width / 2, y - 0.1), label_width, 0.2, fill=True, color='lightblue'))
+            ax.add_patch(plt.Rectangle((x - label_width / 2, y - 0.1), label_width, 0.2, fill=True, color='lightblue', edgecolor='black'))
             plt.text(x, y, label, ha='center', va='center', fontsize=12, color='black')
+
+        nx.draw_networkx_edges(self.net, layout, ax=ax)
 
         # Desative os eixos
         ax.set_xticks([])
