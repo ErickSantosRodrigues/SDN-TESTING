@@ -125,7 +125,7 @@ class SimpleSwitch13(app_manager.RyuApp):
 
         layout = nx.spring_layout(self.net)          
         import matplotlib.pyplot as plt
-        fig, ax = plt.subplots(figsize=(1200, 1000))  # Ajuste as dimensões conforme necessário
+        fig, ax = plt.subplots(figsize=(12, 8))  # Ajuste as dimensões conforme necessário
         for node, (x, y) in layout.items():
             label = self.net.nodes[node]['label']
             label_width = len(label) * 0.08  
