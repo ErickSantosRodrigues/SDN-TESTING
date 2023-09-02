@@ -95,7 +95,7 @@ class SimpleSwitch13(app_manager.RyuApp):
         dpid = format(datapath.id, "d").zfill(16)
         self.mac_to_port.setdefault(dpid, {})
 
-        self.logger.info("packet in %s %s %s %s", dpid, src, dst, in_port)
+        self.logger.info(f"packet in dpid:{dpid}& MAC_SRC:{src} -> MAC_DST:{dst} & in_port:{in_port}")
         if src not in self.net:
             self.net.add_node(src, label=str(src))
             self.net.add_edge(dpid, src)
@@ -119,6 +119,10 @@ class SimpleSwitch13(app_manager.RyuApp):
         # else:
         #     out_port = ofproto.OFPP_FLOOD
         #
+        for node in self.net.nodes:
+            if 'label' not in self.net.nodes[node]:
+                self.net.nodes[node]['label'] = str(node)  # Ou defina rótulos apropriados
+
         layout = nx.circular_layout(self.net)
         import matplotlib.pyplot as plt
         fig, ax = plt.subplots()
