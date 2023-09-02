@@ -139,7 +139,7 @@ class SimpleSwitch13(app_manager.RyuApp):
         ax.set_yticks([])
 
         # Exiba o gráfico
-        plt.show()
+        # plt.show()
 
         fig.savefig("graph.png")
         actions = [parser.OFPActionOutput(out_port)]
