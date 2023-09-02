@@ -14,7 +14,7 @@ class Wifi_band_limit_Topo(Topo):
         sta1 = self.addStation('sta1', mac='00:00:00:00:00:01')
         sta2 = self.addStation('sta2', mac='00:00:00:00:00:02')
         sta3 = self.addStation('sta3', mac='00:00:00:00:00:03')
-        sta4 = self.addStation('sta3', mac='00:00:00:00:00:04')
+        sta4 = self.addStation('sta4', mac='00:00:00:00:00:04')
 
         ap_arg = {'client_isolation': True}
         ap1 = self.addAccessPoint('ap1', ssid='new-ssid', mode='ac', channel='36', position='50,50,0', **ap_arg)
