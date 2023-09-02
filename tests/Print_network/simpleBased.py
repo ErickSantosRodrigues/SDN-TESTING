@@ -123,9 +123,10 @@ class SimpleSwitch13(app_manager.RyuApp):
             if 'label' not in self.net.nodes[node]:
                 self.net.nodes[node]['label'] = str(node)  # Ou defina rótulos apropriados
 
-        layout = nx.circular_layout(self.net)
+        layout = nx.spring_layout(self.net, seed=42)  # 'seed' para tornar a disposição dos nós determinística
+         
         import matplotlib.pyplot as plt
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(figsize=(8, 6))  # Ajuste as dimensões conforme necessário
         for node, (x, y) in layout.items():
             label = self.net.nodes[node]['label']
             label_width = len(label) * 0.08  
