@@ -128,8 +128,8 @@ class SimpleSwitch13(app_manager.RyuApp):
         fig, ax = plt.subplots()
         for node, (x, y) in layout.items():
             label = self.net.nodes[node]['label']
-            label_width = len(label) * 0.06  
-            ax.add_patch(plt.Rectangle((x - label_width / 2, y - 0.1), label_width, 0.2, fill=False, edgecolor='black'))
+            label_width = len(label) * 0.08  
+            ax.add_patch(plt.Rectangle((x - label_width / 2, y - 0.1), label_width, 0.2, fill=True, facecolor='lightblue', edgecolor='black'))
             plt.text(x, y, label, ha='center', va='center', fontsize=12, color='black')
 
         nx.draw_networkx_edges(self.net, layout, ax=ax)
