@@ -126,7 +126,7 @@ class SimpleSwitch13(app_manager.RyuApp):
         layout = nx.spring_layout(self.net, seed=42)  # 'seed' para tornar a disposição dos nós determinística
          
         import matplotlib.pyplot as plt
-        fig, ax = plt.subplots(figsize=(8, 6))  # Ajuste as dimensões conforme necessário
+        fig, ax = plt.subplots(figsize=(12, 10))  # Ajuste as dimensões conforme necessário
         for node, (x, y) in layout.items():
             label = self.net.nodes[node]['label']
             label_width = len(label) * 0.08  
@@ -134,7 +134,7 @@ class SimpleSwitch13(app_manager.RyuApp):
             plt.text(x, y, label, ha='center', va='center', fontsize=12, color='black')
 
         nx.draw_networkx_edges(self.net, layout, ax=ax)
-
+        
         # Desative os eixos
         ax.set_xticks([])
         ax.set_yticks([])
@@ -143,6 +143,8 @@ class SimpleSwitch13(app_manager.RyuApp):
         # plt.show()
 
         fig.savefig("graph.png")
+        # close the figure
+        plt.close(fig)
         actions = [parser.OFPActionOutput(out_port)]
 
         # install a flow to avoid packet_in next time
