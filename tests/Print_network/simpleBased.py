@@ -132,7 +132,7 @@ class SimpleSwitch13(app_manager.RyuApp):
             ax.add_patch(plt.Rectangle((x - label_width / 2, y - 0.1), label_width, 0.2, fill=True, facecolor='lightblue', edgecolor='black'))
             plt.text(x, y, label, ha='center', va='center', fontsize=12, color='black')
 
-        nx.draw_networkx_edges(self.net, layout, ax=ax, min_source_margin=0.0001, min_target_margin=5, node_size=600)
+        nx.draw_networkx_edges(self.net, layout, ax=ax, min_source_margin=0.0001, min_target_margin=0.0001, node_size=600)
         
         # Desative os eixos
         ax.set_xticks([])
