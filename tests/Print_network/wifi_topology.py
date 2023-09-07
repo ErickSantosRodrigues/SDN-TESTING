@@ -11,7 +11,7 @@ class Wifi_band_limit_Topo(Topo):
     def __init__(self, **opts):
         Topo.__init__(self, **opts)
         info("*** Creating nodes\n")
-        sta1 = self.addStation('sta1')
+        sta1 = self.addStation('sta1', mac='48:E5:60:8D:A4:9C')
         # sta2 = self.addStation('sta2', mac='00:00:00:00:00:02')
         # sta3 = self.addStation('sta3', mac='00:00:00:00:00:03')
         # sta4 = self.addStation('sta4', mac='00:00:00:00:00:04')
